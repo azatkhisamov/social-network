@@ -1,0 +1,25 @@
+.nav {
+    grid-area: nav;
+    background-color: bisque;
+    min-height: 500px;
+}
+
+.item {
+    text-align: center;
+    margin: 15px auto;
+    font-size: 18px;
+}
+
+.item a {
+    color: black;
+    text-decoration: none;
+}
+
+.friends {
+    display: flex;
+}
+
+.nav h2 {
+    text-align: center;
+    margin-top: 60px;
+}

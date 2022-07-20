@@ -1,0 +1,21 @@
+.avatar {
+    border-radius: 100%;
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+
+.text {
+    font-size: 14px;
+    line-height: 150%;
+    margin: 0px 10px;
+}
+
+.post {
+    margin:20px 10px;
+    background-color: darkgray;
+    padding: 10px;
+    display: flex;
+    max-width: 600px;
+    border-radius: 5%;
+}

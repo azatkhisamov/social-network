@@ -1,0 +1,46 @@
+.dialogs {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+}
+
+.dialogItems {
+    margin: 10px;
+}
+
+.dialog {
+    margin: 10px;
+    padding: 5px;
+}
+
+.dialog img {
+    object-fit: cover;
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+}
+
+.dialog a {
+    text-decoration: none;
+    color: black;
+}
+
+.messages {
+    margin: 10px;
+}
+
+.message {
+    margin: 15px;
+    font-size: 16px;
+    font-family: 'Times New Roman', Times, serif;
+    padding: 5px;
+    width: 200px;
+}
+
+/* .user {
+    text-align: right;
+    background-color: aqua;
+}
+
+.another {
+    text-align: left;
+} */
