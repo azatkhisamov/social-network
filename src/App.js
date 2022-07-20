@@ -2,7 +2,7 @@ import "./App.css";
 import Header from "./components/Header/Header";
 import Navbar from "./components/Navbar/Navbar";
 import Profile from "./components/Profile/Profile";
-import Dialogs from "./components/Dialogs/Dialogs";
+import DialogsContainer from "./components/Dialogs/DialogsContainer";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App(props) {
@@ -26,7 +26,7 @@ function App(props) {
               exact
               path="/dialogs"
               element={
-                <Dialogs
+                <DialogsContainer
                   state={props.state.dialogsPage}
                   dispatch={props.dispatch}
                 />

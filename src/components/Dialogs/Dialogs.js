@@ -2,16 +2,16 @@ import React from "react";
 import s from "./Dialogs.module.css";
 import DialogItem from "./DialogItem/DialogItem";
 import Message from "./Message/Message";
-import { sendMessageActionCreator, updateMessageActionCreator } from "../../redux/dialogsReducer";
 
 const Dialogs = (props) => {
 
   let sendMessage = () => {
-    props.dispatch( sendMessageActionCreator() )
+    props.sendMessage()
   }
 
   let updateMessage = (event) => {
-    props.dispatch(updateMessageActionCreator(event.target.value))
+    let targetValue = event.target.value;
+    props.updateMessage(targetValue)
   }
 
   return (

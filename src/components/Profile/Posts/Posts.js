@@ -1,16 +1,16 @@
 import React from "react";
 import Post from "./Post/Post";
 import s from "./Posts.module.css";
-import { addNewPostActionCreator, updatePostActionCreator } from "../../../redux/profileReducer";
 
 const Posts = (props) => {
 
   const addNewPost = () => {
-    props.dispatch(addNewPostActionCreator());
+    props.addNewPost();
   }
 
   const updatePost = (event) => {
-    props.dispatch(updatePostActionCreator(event.target.value))
+    let targetValue = event.target.value;
+    props.updatePost(targetValue);
   }
 
   return (
