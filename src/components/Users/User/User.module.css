@@ -1,0 +1,44 @@
+.user {
+    display: grid;
+    padding: 10px;
+    margin: 30px;
+    grid-template-areas: 
+        'avatar description'
+        'button description';
+    grid-template-columns: 120px 400px;
+    grid-template-rows: 120px 30px;
+}
+
+.avatar {
+    grid-area: avatar;
+    margin: 10px;
+}
+
+.avatar img {
+    border-radius: 100%;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.button {
+    grid-area: button;
+    margin-left: 10px;
+}
+
+.button button {
+    width: 100px;
+    padding: 2px;
+    background-color: cadetblue;
+}
+
+.description {
+    grid-area: description;
+    border: 1px solid black;
+    border-radius: 2% ;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    grid-template-rows: 120px 1fr;
+    /* font-family: 'Times New Roman', Times, serif; */
+    /* font-size: 16px; */
+}

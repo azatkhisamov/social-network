@@ -17,7 +17,7 @@ const Dialogs = (props) => {
   return (
     <div className={s.dialogs}>
       <div className={s.dialogsItems}>
-        {props.state.dialogsData.map((item) => (
+        {props.dialogsPage.dialogsData.map((item) => (
           <DialogItem
             key={item.id}
             name={item.name}
@@ -27,12 +27,12 @@ const Dialogs = (props) => {
         ))}
       </div>
       <div className={s.messages}>
-        {props.state.messagesData.map((item) => (
+        {props.dialogsPage.messagesData.map((item) => (
           <Message key={item.id} message={item.message} writer={item.writer} />
         ))}
       </div>
       <div>
-        <textarea value={props.state.newMessage} onChange={updateMessage}></textarea>
+        <textarea value={props.dialogsPage.newMessage} onChange={updateMessage}></textarea>
       </div>
       <div>
         <button onClick={sendMessage}>Отправить</button>

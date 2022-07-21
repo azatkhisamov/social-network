@@ -1,8 +1,9 @@
 import "./App.css";
 import Header from "./components/Header/Header";
-import Navbar from "./components/Navbar/Navbar";
+import NavbarContainer from "./components/Navbar/Navbar";
 import Profile from "./components/Profile/Profile";
 import DialogsContainer from "./components/Dialogs/DialogsContainer";
+import UsersContainer from "./components/Users/UsersContainer";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App(props) {
@@ -10,28 +11,12 @@ function App(props) {
     <BrowserRouter>
       <div className="app-wrapper">
         <Header />
-        <Navbar friends={props.state.navbar.friends} />
+        <NavbarContainer />
         <div className="app-wrapper-content">
           <Routes>
-            <Route
-              path="/profile"
-              element={
-                <Profile
-                  state={props.state.profilePage}
-                  dispatch={props.dispatch}
-                />
-              }
-            />
-            <Route
-              exact
-              path="/dialogs"
-              element={
-                <DialogsContainer
-                  state={props.state.dialogsPage}
-                  dispatch={props.dispatch}
-                />
-              }
-            />
+            <Route path="/profile" element={<Profile />} />
+            <Route exact path="/dialogs" element={<DialogsContainer />} />
+            <Route path="/users" element={<UsersContainer />} />
           </Routes>
         </div>
       </div>

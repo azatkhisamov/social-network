@@ -18,13 +18,13 @@ const Posts = (props) => {
       <div>
         <h2>My posts</h2>
         <div>
-          <textarea value={props.state.newPost} onChange={updatePost}></textarea>
+          <textarea value={props.profilePage.newPost} onChange={updatePost}></textarea>
         </div>
         <div>
           <button onClick={addNewPost}>Добавить</button>
         </div>
       </div>
-      {props.state.postData.map((item) => (
+      {props.profilePage.postData.map((item) => (
         <Post key={item.id} message={item.message} />
       )).reverse()}
     </div>
