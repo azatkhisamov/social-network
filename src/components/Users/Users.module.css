@@ -1,0 +1,12 @@
+.pagination {
+    margin: 10px auto;
+    max-width: 500px;
+}
+
+.selected {
+    background-color: cornflowerblue;
+}
+
+.pagination span {
+    margin: 3px;
+}

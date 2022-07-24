@@ -8,9 +8,9 @@ import { connect } from "react-redux/es/exports";
 const Navbar = (props) => {
   return (
     <nav className={s.nav}>
-      <div className={s.item}>
-        <NavLink to='/profile'>Profile</NavLink>
-      </div>
+      {props.userId ? <div className={s.item}>
+        <NavLink to={`/profile`}>Profile</NavLink>
+      </div> : <div style={{display: 'none'}}></div>}
       <div className={s.item}>
         <NavLink to='/dialogs'>Messages</NavLink>
       </div>
@@ -36,7 +36,8 @@ const Navbar = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    navbar: state.navbar
+    navbar: state.navbar,
+    userId: state.auth.id,
   }
 }
 

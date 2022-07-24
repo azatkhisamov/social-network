@@ -1,34 +1,43 @@
 import React from "react";
 import s from "./Users.module.css";
 import User from "./User/User";
-import * as axios from "axios";
 
-class Users extends React.Component {
-  constructor(props) {
-    super(props);
+const Users = (props) => {
+  let amountPages = Math.ceil(
+    props.users.totalCount / props.users.countUsers / 200
+  );
+  let pages = [];
+  for (let i = 1; i <= amountPages; i++) {
+    pages.push(i);
   }
-
-  componentDidMount(){
-    axios
-        .get("https://social-network.samuraijs.com/api/1.0/users?page=4")
-        .then((responce) => this.props.setUsers(responce.data.items));
-  }
-
-  render() {
-    return (
-      <div>
-        <h2>Users</h2>
-        {this.props.users.map((user) => (
-          <User
-            key={user.id}
-            info={user}
-            followUnfollow={this.props.followUnfollow}
-          />
-        ))}
-        <button>Show more</button>
+  return (
+    <div>
+      <h2>Users</h2>
+      <div className={s.pagination}>
+        {pages.map((page) => {
+          return (
+            <span
+              key={page}
+              onClick={() => props.onPaginationClick(page)}
+              className={props.users.currentPage === page && s.selected}
+            >
+              {page}
+            </span>
+          );
+        })}
       </div>
-    );
-  }
-}
+      {props.users.users.map((user) => (
+        <User
+          key={user.id}
+          info={user}
+          followUnfollow={props.followUnfollow}
+          followUser={props.followUser}
+          unFollowUser={props.unFollowUser}
+        />
+      ))}
+      <button>Show more</button>
+    </div>
+  );
+};
 
 export default Users;
