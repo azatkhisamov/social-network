@@ -1,36 +1,24 @@
 import React from "react";
 import Profile from "./Profile";
-import { setUserProfile } from "../../redux/profileReducer";
 import { connect } from "react-redux";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { profileAPI } from "../../api/api"
+import { updateUserProfile, getUserProfile } from "../../redux/profileReducer";
+import withRouter from "../../hoc/withRouter";
+import withAuthRedirectComponent from "../../hoc/withAuthRedirectComponent";
+import { compose } from "redux";
 
 class ProfileContainer extends React.Component {
   componentDidMount() {
     // debugger;
-    let userId = this.props.router.params.userId
-      ? this.props.router.params.userId
-      : this.props.userId;
-    if (userId) {
-      profileAPI.setUserProfile(userId).then(data => this.props.setUserProfile(data))
-    }
+    this.props.getUserProfile(this.props.router.params.userId, this.props.userId);
   }
 
   componentDidUpdate() {
     // debugger;
-    if (
-      this.props.profile.userId !== +this.props.router.params.userId &&
-      this.props.profile.userId !== this.props.userId
-    ) {
-      let userId = this.props.router.params.userId
-        ? this.props.router.params.userId
-        : this.props.userId;
-      profileAPI.setUserProfile(userId).then(data => this.props.setUserProfile(data))
-    }
+    this.props.updateUserProfile(this.props.router.params.userId, this.props.profile.userId, this.props.userId)
   }
 
   render() {
-    debugger;
+    // debugger;
     return <Profile {...this.props} profile={this.props.profile} />;
   }
 }
@@ -42,18 +30,9 @@ const mapStateToProps = (state) => {
   };
 };
 
-function withRouter(Component) {
-  function ComponentWithRouterProp(props) {
-    let location = useLocation();
-    let navigate = useNavigate();
-    let params = useParams();
-    return <Component {...props} router={{ location, navigate, params }} />;
-  }
+export default compose(
+  withRouter,
+  withAuthRedirectComponent,
+  connect(mapStateToProps, { updateUserProfile, getUserProfile })
+)(ProfileContainer);
 
-  return ComponentWithRouterProp;
-}
-
-const containerComponentWithUrlData = withRouter(ProfileContainer);
-export default connect(mapStateToProps, { setUserProfile })(
-  containerComponentWithUrlData
-);

@@ -4,7 +4,6 @@ import userPhoto from "./../../../assets/images/147144.png";
 import { NavLink } from "react-router-dom";
 
 const User = (props) => {
-
   return (
     <div className={s.user}>
       <div className={s.avatar}>
@@ -21,7 +20,7 @@ const User = (props) => {
         </div>
       </div>
       <div className={s.button}>
-        <button onClick={() => {
+        <button disabled={props.followingInProgress.some(id => id == props.info.id)} onClick={() => {
           props.info.followed ? props.unFollowUser(props.info.id) : props.followUser(props.info.id)
         }}>
           {props.info.followed === true ? "Unfollow" : "Follow"}

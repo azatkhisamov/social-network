@@ -4,7 +4,7 @@ import User from "./User/User";
 
 const Users = (props) => {
   let amountPages = Math.ceil(
-    props.users.totalCount / props.users.countUsers / 200
+    props.users.totalCount / props.users.countUsers / 100
   );
   let pages = [];
   for (let i = 1; i <= amountPages; i++) {
@@ -30,9 +30,9 @@ const Users = (props) => {
         <User
           key={user.id}
           info={user}
-          followUnfollow={props.followUnfollow}
           followUser={props.followUser}
           unFollowUser={props.unFollowUser}
+          followingInProgress={props.users.followingInProgress}
         />
       ))}
       <button>Show more</button>

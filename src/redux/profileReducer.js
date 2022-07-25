@@ -1,3 +1,5 @@
+import { profileAPI } from "../api/api";
+
 const ADD_NEW_POST = "ADD-NEW-POST";
 const UPDATE_POST = "UPDATE-POST";
 const SET_USER_PROFILE = "SET-USER-PROFILE";
@@ -66,5 +68,24 @@ export const setUserProfile = (profile) => ({
   type: SET_USER_PROFILE,
   profile: profile,
 })
+
+export const updateUserProfile = (routeID, userID, authorizedID) => {
+  return (dispatch) => {
+  if (userID !== +routeID && userID !== authorizedID) {
+    let id = routeID
+      ? routeID
+      : authorizedID;
+    profileAPI.setUserProfile(id).then(data => dispatch(setUserProfile(data)));
+  }
+}}
+
+export const getUserProfile = (routeID, authorizedID) => dispatch => {
+  let id = routeID
+      ? routeID
+      : authorizedID;
+    if (id) {
+      profileAPI.setUserProfile(id).then(data => dispatch(setUserProfile(data)));
+    }
+}
 
 export default profileReducer;

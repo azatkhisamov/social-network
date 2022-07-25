@@ -1,15 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
 import {
-  followUnfollow,
-  setUsers,
-  setCurrentPage,
-  setTotalCount,
-  loading,
+  getUsers,
+  follow,
+  unFollow,
 } from "../../redux/usersReducer";
 import Users from "./Users";
 import Preloader from "../common/Preloader/Preloader";
-import { usersAPI } from "../../api/api"
 
 class UsersContainer extends React.Component {
   constructor(props) {
@@ -17,40 +14,26 @@ class UsersContainer extends React.Component {
   }
 
   componentDidMount() {
-    usersAPI.getUsers(this.props.currentPage, this.props.countUsers).then(data => {
-      this.props.setTotalCount(data.totalCount);
-        this.props.setUsers(data.items);
-        this.props.loading();
-    })
+    this.props.getUsers(
+      this.props.users.currentPage,
+      this.props.users.countUsers
+    );
   }
 
   onPaginationClick(numberPage) {
-    this.props.setCurrentPage(numberPage);
-    this.props.loading();
-    usersAPI.getUsers(numberPage, this.props.countUsers).then(data => {
-        this.props.setUsers(data.items);
-        this.props.loading();
-    })
+    this.props.getUsers(numberPage, this.props.users.countUsers);
   }
 
   followUser(userID) {
-    usersAPI.followUser(userID).then(data => {
-      if (data.resultCode === 0) {
-        this.props.followUnfollow(userID)
-      }
-    })
+    this.props.follow(userID);
   }
 
   unFollowUser(userID) {
-    usersAPI.unFollowUser(userID).then(data => {
-      if (data.resultCode === 0) {
-        this.props.followUnfollow(userID)
-      }
-    })
+    this.props.unFollow(userID);
   }
 
   render() {
-    // debugger;
+    debugger;
     return (
       <React.Fragment>
         {this.props.users.isFetching ? (
@@ -59,7 +42,6 @@ class UsersContainer extends React.Component {
           <Users
             users={this.props.users}
             onPaginationClick={this.onPaginationClick.bind(this)}
-            followUnfollow={this.props.followUnfollow}
             followUser={this.followUser.bind(this)}
             unFollowUser={this.unFollowUser.bind(this)}
           />
@@ -75,4 +57,8 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, {followUnfollow, setUsers, setCurrentPage, setTotalCount, loading})(UsersContainer);
+export default connect(mapStateToProps, {
+  getUsers,
+  follow,
+  unFollow,
+})(UsersContainer);
