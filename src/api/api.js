@@ -23,11 +23,39 @@ export const usersAPI = {
 export const profileAPI = {
     setUserProfile(userID) {
         return instance.get(`profile/${userID}`).then(response => response.data)
-    }
+    },
+    getUserStatus(userID) {
+        return instance.get(`profile/status/${userID}`).then(response => response.data);
+    },
+    updateUserStatus(status) {
+        return instance.put(`profile/status`, {status: status}).then(response => response.data);
+    },
+    savePhoto(imageFile) {
+        let formdata = new FormData();
+        formdata.append('image', imageFile);
+        return instance.put("profile/photo", formdata, {
+            headers: {"Content-Type": "multipart/form-data"}
+        }).then(response => response.data);
+    },
+    updateProfileData(profile) {
+        return instance.put('profile', profile).then(response => response.data);
+    },
 }
 
 export const authAPI = {
     auth() {
         return instance.get('auth/me').then(response => response.data)
-    }
+    },
+    login(email, password, rememberMe = false, captcha = null) {
+        return instance.post("auth/login", {email, password, rememberMe, captcha}).then(response => response.data)
+    },
+    logout() {
+        return instance.delete("auth/login").then(response => response.data)
+    },
+}
+
+export const securityAPI = {
+    getCaptchaUrl() {
+        return instance.get("security").then(response => response.data);
+    },
 }

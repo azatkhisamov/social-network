@@ -1,38 +1,54 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Profile from "./Profile";
 import { connect } from "react-redux";
-import { updateUserProfile, getUserProfile } from "../../redux/profileReducer";
+import {
+  updateUserStatus,
+  getUserProfile,
+  getUserStatus,
+  savePhoto,
+  updateProfileData,
+} from "../../redux/profileReducer";
 import withRouter from "../../hoc/withRouter";
 import withAuthRedirectComponent from "../../hoc/withAuthRedirectComponent";
 import { compose } from "redux";
 
-class ProfileContainer extends React.Component {
-  componentDidMount() {
-    // debugger;
-    this.props.getUserProfile(this.props.router.params.userId, this.props.userId);
-  }
+const ProfileContainer = props => {
+  
+  useEffect(() => {
+    let userID = props.router.params.userId || props.authId;
+    props.getUserProfile(userID);
+    props.getUserStatus(userID);
+  }, [props.router.params.userId]);
 
-  componentDidUpdate() {
-    // debugger;
-    this.props.updateUserProfile(this.props.router.params.userId, this.props.profile.userId, this.props.userId)
-  }
-
-  render() {
-    // debugger;
-    return <Profile {...this.props} profile={this.props.profile} />;
-  }
-}
+  return (
+    <Profile
+      {...props}
+      profile={props.profile}
+      updateStatus={props.updateUserStatus}
+      status={props.status}
+      savePhoto={props.savePhoto}
+      updateProfileData={props.updateProfileData}
+    />
+  );
+};
 
 const mapStateToProps = (state) => {
   return {
     profile: state.profilePage.profile,
-    userId: state.auth.id,
+    authId: state.auth.id,
+    status: state.profilePage.status,
   };
 };
 
 export default compose(
   withRouter,
   withAuthRedirectComponent,
-  connect(mapStateToProps, { updateUserProfile, getUserProfile })
+  connect(mapStateToProps, {
+    getUserProfile,
+    getUserStatus,
+    updateUserStatus,
+    savePhoto,
+    updateProfileData,
+  })
 )(ProfileContainer);
 

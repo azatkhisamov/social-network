@@ -1,9 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import s from "./ProfileInfo.module.css";
-import avatar from "../../../assets/images/147144.png";
 import Preloader from "../../common/Preloader/Preloader";
+import Status from "./ProfileSections/Status";
+import Avatar from "./ProfileSections/Avatar";
+import ProfileData from "./ProfileSections/ProfileData";
+import UpdateProfileForm from "./ProfileSections/UpdateProfileForm";
 
 const ProfileInfo = (props) => {
+  let [editMode, setEditMode] = useState(false);
+
+  const updateProfile = (formData) => {
+    debugger;
+    props.updateProfileData(formData).then(() => setEditMode(false));
+    // setEditMode(false);
+  };
+
   if (props.profile.length === 0) {
     return <Preloader />;
   }
@@ -12,15 +23,41 @@ const ProfileInfo = (props) => {
       <div className={s.imageHead}></div>
       <div className={s.info}>
         <div className={s.avatar}>
-        <img
-            src={
-              props.profile.photos.large ? props.profile.photos.large : avatar
-            }
+          <Avatar
+            photo={props.profile.photos.large}
+            savePhoto={props.savePhoto}
+            authId={props.authId}
+            profileId={props.profile.userId}
           />
         </div>
         <div className={s.description}>
-          <p>{props.profile.fullName}</p>
-          <p>{props.profile.aboutMe}</p>
+          <div>
+            <span className={s.userName}>{props.profile.fullName}</span>
+          </div>
+          <div>
+            <Status
+              status={props.status}
+              authId={props.authId}
+              updateStatus={props.updateStatus}
+              profileId={props.profile.userId}
+            />
+          </div>
+          <div className={s.information}>
+            {!editMode ? (
+              <ProfileData
+                profile={props.profile}
+                authId={props.authId}
+                activateEditMode={() => setEditMode(true)}
+              />
+            ) : (
+              <UpdateProfileForm
+                onSubmit={updateProfile}
+                initialValues={props.profile}
+                cancelUpdate={() => setEditMode(false)}
+                profile={props.profile}
+              />
+            )}
+          </div>
         </div>
       </div>
     </React.Fragment>

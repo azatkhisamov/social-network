@@ -1,38 +1,27 @@
 import React from "react";
 import s from "./Users.module.css";
 import User from "./User/User";
+import Pagination from "./Pagination";
 
 const Users = (props) => {
-  let amountPages = Math.ceil(
-    props.users.totalCount / props.users.countUsers / 100
-  );
-  let pages = [];
-  for (let i = 1; i <= amountPages; i++) {
-    pages.push(i);
-  }
+  
   return (
     <div>
       <h2>Users</h2>
-      <div className={s.pagination}>
-        {pages.map((page) => {
-          return (
-            <span
-              key={page}
-              onClick={() => props.onPaginationClick(page)}
-              className={props.users.currentPage === page && s.selected}
-            >
-              {page}
-            </span>
-          );
-        })}
-      </div>
-      {props.users.users.map((user) => (
+      <Pagination
+        totalCount={props.totalCount}
+        countUsers={props.countUsers}
+        onPaginationClick={props.onPaginationClick}
+        currentPage={props.currentPage}
+      />
+      {props.users.map((user) => (
         <User
           key={user.id}
-          info={user}
+          user={user}
           followUser={props.followUser}
           unFollowUser={props.unFollowUser}
-          followingInProgress={props.users.followingInProgress}
+          followingInProgress={props.followingInProgress}
+          authID={props.authID}
         />
       ))}
       <button>Show more</button>

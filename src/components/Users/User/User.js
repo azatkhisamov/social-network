@@ -8,11 +8,11 @@ const User = (props) => {
     <div className={s.user}>
       <div className={s.avatar}>
         <div>
-          <NavLink to={`/profile/${props.info.id}`}>
+          <NavLink to={props.user.id !== props.authID ? `/profile/${props.user.id}` : '/profile'}>
             <img
               src={
-                props.info.photos.small != null
-                  ? props.info.photos.small
+                props.user.photos.small != null
+                  ? props.user.photos.small
                   : userPhoto
               }
             />
@@ -20,16 +20,16 @@ const User = (props) => {
         </div>
       </div>
       <div className={s.button}>
-        <button disabled={props.followingInProgress.some(id => id == props.info.id)} onClick={() => {
-          props.info.followed ? props.unFollowUser(props.info.id) : props.followUser(props.info.id)
+        <button disabled={props.followingInProgress.some(id => id == props.user.id)} onClick={() => {
+          props.user.followed ? props.unFollowUser(props.user.id) : props.followUser(props.user.id)
         }}>
-          {props.info.followed === true ? "Unfollow" : "Follow"}
+          {props.user.followed === true ? "Unfollow" : "Follow"}
         </button>
       </div>
       <div className={s.description}>
-        <div>{props.info.name}</div>
+        <div>{props.user.name}</div>
         <div>Moscow, Russia</div>
-        <div>{props.info.status}</div>
+        <div>{props.user.status}</div>
       </div>
     </div>
   );

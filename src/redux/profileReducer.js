@@ -1,8 +1,10 @@
 import { profileAPI } from "../api/api";
+import { stopSubmit } from "redux-form";
 
-const ADD_NEW_POST = "ADD-NEW-POST";
-const UPDATE_POST = "UPDATE-POST";
-const SET_USER_PROFILE = "SET-USER-PROFILE";
+const ADD_NEW_POST = "profile/ADD-NEW-POST";
+const SET_USER_PROFILE = "profile/SET-USER-PROFILE";
+const SET_USER_STATUS = "profile/SET-USER-STATUS";
+const SAVE_PHOTO_SUCCES = "profile/SAVE-PHOTO-SUCCES";
 
 let initialState = {
   profile: [],
@@ -32,60 +34,90 @@ let initialState = {
         "Русский парень starter pack. Фамейе забивает пенальти и выводит Рубин вперед.",
     },
   ],
-  newPost: "",
+  status: "",
 };
 
 const profileReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_NEW_POST:
-      let newPost = { id: state.postData.at(-1).id, message: state.newPost };
+      let newPost = { id: state.postData.at(-1).id, message: action.post };
       return {
         ...state,
         postData: [...state.postData, newPost],
-        newPost: "",
-      };
-    case UPDATE_POST:
-      return {
-        ...state,
-        newPost: action.newText,
       };
     case SET_USER_PROFILE:
       return {
-        ...state, 
+        ...state,
         profile: action.profile,
+      };
+    case SET_USER_STATUS:
+      return {
+        ...state,
+        status: action.status,
+      };
+    case SAVE_PHOTO_SUCCES:
+      return {
+        ...state,
+        profile: {...state.profile, photos: action.photos},
       }
     default:
       return state;
   }
 };
 
-export const addNewPost = () => ({ type: ADD_NEW_POST });
-export const updatePost = (newText) => ({
-  type: UPDATE_POST,
-  newText: newText,
-});
+export const addNewPost = (post) => ({ type: ADD_NEW_POST, post });
 export const setUserProfile = (profile) => ({
   type: SET_USER_PROFILE,
   profile: profile,
+});
+
+const setUserStatus = (status) => ({
+  type: SET_USER_STATUS,
+  status: status,
+});
+
+const savePhotoSucces = (photos) => ({
+  type: SAVE_PHOTO_SUCCES,
+  photos,
 })
 
-export const updateUserProfile = (routeID, userID, authorizedID) => {
-  return (dispatch) => {
-  if (userID !== +routeID && userID !== authorizedID) {
-    let id = routeID
-      ? routeID
-      : authorizedID;
-    profileAPI.setUserProfile(id).then(data => dispatch(setUserProfile(data)));
-  }
-}}
+export const getUserProfile = (id) => {
+  return async (dispatch) => {
+    const data = await profileAPI.setUserProfile(id);
+    dispatch(setUserProfile(data));
+  };
+};
 
-export const getUserProfile = (routeID, authorizedID) => dispatch => {
-  let id = routeID
-      ? routeID
-      : authorizedID;
-    if (id) {
-      profileAPI.setUserProfile(id).then(data => dispatch(setUserProfile(data)));
-    }
+export const getUserStatus = (userID) => async (dispatch) => {
+  const data = await profileAPI.getUserStatus(userID);
+  dispatch(setUserStatus(data));
+};
+
+export const updateUserStatus = (status) => async (dispatch) => {
+  const data = await profileAPI.updateUserStatus(status);
+  if (data.resultCode === 0) {
+    dispatch(setUserStatus(status));
+  }
+};
+
+export const savePhoto = (imageFile) => async (dispatch) => {
+  debugger
+  const data = await profileAPI.savePhoto(imageFile);
+  if (data.resultCode === 0) {
+    dispatch(savePhotoSucces(data.data.photos));
+  }
+}
+
+export const updateProfileData = (profile) => async (dispatch, getState) => {
+  const authID = getState().auth.id;
+  const data = await profileAPI.updateProfileData(profile);
+  if (data.resultCode === 0) {
+    dispatch(getUserProfile(authID));
+  }
+  else {
+    dispatch(stopSubmit("update-profile", { _error: data.messages[0] || "Some error" }));
+    return Promise.reject();
+  }
 }
 
 export default profileReducer;

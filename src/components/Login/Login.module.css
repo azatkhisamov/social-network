@@ -1,0 +1,12 @@
+.loginForm {
+    margin: 150px auto;
+    width: 400px;
+}
+
+.form {
+    margin: 10px 0px 0px 0px;
+}
+
+.error {
+    color: rgb(199, 21, 21)
+}

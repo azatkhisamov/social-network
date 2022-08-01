@@ -1,32 +1,50 @@
 import React from "react";
 import Post from "./Post/Post";
 import s from "./Posts.module.css";
+import { Field, reduxForm } from "redux-form";
+import {required, maxLengthCreator} from "../../../utils/validators";
+import { Textarea } from "../../../utils/FormControls/FormControls";
 
-const Posts = (props) => {
+const maxLength50 = maxLengthCreator(50);
 
-  const addNewPost = () => {
-    props.addNewPost();
-  }
+let PostForm = props => {
+  return (
+    <form onSubmit={props.handleSubmit}>
+      <div>
+        <Field
+          name='post'
+          component={Textarea}
+          placeholder='Добавьте пост'
+          validate={[required, maxLength50]}
+        />
+      </div>
+      <div>
+        <button>Добавить</button>
+      </div>
+    </form>
+  );
+};
 
-  const updatePost = (event) => {
-    let targetValue = event.target.value;
-    props.updatePost(targetValue);
-  }
+PostForm = reduxForm({
+  form: 'Post'
+})(PostForm);
+
+const Posts = props => {
+  
+  const onSubmit = (formData) => {
+    props.addNewPost(formData.post);
+    formData.post = ''
+  };
 
   return (
     <div className={s.posts}>
       <div>
         <h2>My posts</h2>
-        <div>
-          <textarea value={props.profilePage.newPost} onChange={updatePost}></textarea>
-        </div>
-        <div>
-          <button onClick={addNewPost}>Добавить</button>
-        </div>
+        <PostForm onSubmit={onSubmit}/>
       </div>
-      {props.profilePage.postData.map((item) => (
-        <Post key={item.id} message={item.message} />
-      )).reverse()}
+      {props.posts
+        .map((item) => <Post key={item.id} message={item.message} />)
+        .reverse()}
     </div>
   );
 };

@@ -1,11 +1,11 @@
 import { usersAPI } from "../api/api";
 
-const FOLLOW_UNFOLLOW = "FOLLOW-UNFOLLOW";
-const SET_USERS = "SET-USERS";
-const SET_CURRENT_PAGE = "SET-CURRENT-PAGE";
-const SET_TOTAL_COUNT = "SET-TOTAL-COUNT";
-const LOADING = "LOADING";
-const FOLLOWING_PROGRESS = "FOLLOWING-PROGRESS";
+const FOLLOW_UNFOLLOW = "users/FOLLOW-UNFOLLOW";
+const SET_USERS = "users/SET-USERS";
+const SET_CURRENT_PAGE = "users/SET-CURRENT-PAGE";
+const SET_TOTAL_COUNT = "users/SET-TOTAL-COUNT";
+const LOADING = "users/LOADING";
+const FOLLOWING_PROGRESS = "users/FOLLOWING-PROGRESS";
 
 let initialState = {
   users: [],
@@ -90,40 +90,37 @@ export const followingProgress = (isFetching, userID) => ({
   userID,
 });
 
-export const getUsers = (page, count) => {
-  return (dispatch) => {
+export const requestUsers = (page, count) => {
+  return async (dispatch) => {
     dispatch(loading());
-    usersAPI.getUsers(page, count).then((data) => {
-      dispatch(setCurrentPage(page));
-      dispatch(setTotalCount(data.totalCount));
-      dispatch(setUsers(data.items));
-      dispatch(loading());
-    });
+    const data = await usersAPI.getUsers(page, count);
+    dispatch(setCurrentPage(page));
+    dispatch(setTotalCount(data.totalCount));
+    dispatch(setUsers(data.items));
+    dispatch(loading());
   };
 };
 
 export const follow = (userID) => {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch(followingProgress(true, userID));
-    usersAPI.followUser(userID).then(data => {
-      if (data.resultCode === 0) {
-        dispatch(followUnfollow(userID));
-      }
-      dispatch(followingProgress(false, userID));
-    })
-  }
-}
+    const data = await usersAPI.followUser(userID);
+    if (data.resultCode === 0) {
+      dispatch(followUnfollow(userID));
+    }
+    dispatch(followingProgress(false, userID));
+  };
+};
 
 export const unFollow = (userID) => {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch(followingProgress(true, userID));
-    usersAPI.unFollowUser(userID).then(data => {
-      if (data.resultCode === 0) {
-        dispatch(followUnfollow(userID));
-      }
-      dispatch(followingProgress(false, userID));
-    })
-  }
-}
+    const data = await usersAPI.unFollowUser(userID);
+    if (data.resultCode === 0) {
+      dispatch(followUnfollow(userID));
+    }
+    dispatch(followingProgress(false, userID));
+  };
+};
 
 export default usersReducer;

@@ -2,16 +2,35 @@ import React from "react";
 import s from "./Dialogs.module.css";
 import DialogItem from "./DialogItem/DialogItem";
 import Message from "./Message/Message";
+import { Field, reduxForm } from "redux-form";
+
+let DialogsForm = (props) => {
+  return(
+    <form onSubmit={props.handleSubmit}>
+        <div>
+          <Field
+            name={'message'}
+            component={'textarea'}
+            placeholder={'Введите сообщение'}
+          />
+        </div>
+        <div>
+          <button>Отправить</button>
+        </div>
+      </form>
+  )
+}
+
+DialogsForm = reduxForm({
+  form: 'dialog'
+})(DialogsForm);
+
 
 const Dialogs = (props) => {
 
-  let sendMessage = () => {
-    props.sendMessage()
-  }
-
-  let updateMessage = (event) => {
-    let targetValue = event.target.value;
-    props.updateMessage(targetValue)
+  const onSubmit = (formData) => {
+    props.sendMessage(formData.message)
+    formData.message = ''
   }
 
   return (
@@ -31,14 +50,11 @@ const Dialogs = (props) => {
           <Message key={item.id} message={item.message} writer={item.writer} />
         ))}
       </div>
-      <div>
-        <textarea value={props.dialogsPage.newMessage} onChange={updateMessage}></textarea>
-      </div>
-      <div>
-        <button onClick={sendMessage}>Отправить</button>
-      </div>
+      <DialogsForm onSubmit={onSubmit}/>
     </div>
   );
 };
+
+
 
 export default Dialogs;

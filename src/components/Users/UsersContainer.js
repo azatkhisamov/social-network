@@ -1,12 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
 import {
-  getUsers,
+  requestUsers,
   follow,
   unFollow,
+  setCurrentPage,
 } from "../../redux/usersReducer";
 import Users from "./Users";
 import Preloader from "../common/Preloader/Preloader";
+import { getCountUsers, getCurrentPage, getFollowingInProgress, getIsFetching, getTotalCount, getUsers } from "../../redux/usersSelectors";
 
 class UsersContainer extends React.Component {
   constructor(props) {
@@ -14,14 +16,18 @@ class UsersContainer extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getUsers(
-      this.props.users.currentPage,
-      this.props.users.countUsers
+    this.props.requestUsers(
+      this.props.currentPage,
+      this.props.countUsers
     );
   }
 
+  componentWillUnmount() {
+    this.props.setCurrentPage(1);
+  }
+
   onPaginationClick(numberPage) {
-    this.props.getUsers(numberPage, this.props.users.countUsers);
+    this.props.requestUsers(numberPage, this.props.countUsers);
   }
 
   followUser(userID) {
@@ -33,17 +39,22 @@ class UsersContainer extends React.Component {
   }
 
   render() {
-    debugger;
+    // debugger;
     return (
       <React.Fragment>
-        {this.props.users.isFetching ? (
+        {this.props.isFetching ? (
           <Preloader />
         ) : (
           <Users
             users={this.props.users}
+            currentPage={this.props.currentPage}
+            totalCount={this.props.totalCount}
+            countUsers={this.props.countUsers}
+            followingInProgress={this.props.followingInProgress}
             onPaginationClick={this.onPaginationClick.bind(this)}
             followUser={this.followUser.bind(this)}
             unFollowUser={this.unFollowUser.bind(this)}
+            authID={this.props.authID}
           />
         )}
       </React.Fragment>
@@ -53,12 +64,19 @@ class UsersContainer extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    users: state.usersPage,
+    users: getUsers(state),
+    currentPage: getCurrentPage(state),
+    totalCount: getTotalCount(state),
+    countUsers: getCountUsers(state),
+    followingInProgress: getFollowingInProgress(state),
+    isFetching: getIsFetching(state),
+    authID: state.auth.id,
   };
 };
 
 export default connect(mapStateToProps, {
-  getUsers,
+  requestUsers,
   follow,
   unFollow,
+  setCurrentPage
 })(UsersContainer);

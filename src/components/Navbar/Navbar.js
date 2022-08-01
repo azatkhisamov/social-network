@@ -2,7 +2,7 @@ import React from "react";
 import s from './Navbar.module.css'
 import { NavLink } from "react-router-dom"
 import Friends from "./Friends/Friends";
-import { connect } from "react-redux/es/exports";
+import { connect } from "react-redux";
 
 
 const Navbar = (props) => {
