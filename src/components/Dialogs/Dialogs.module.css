@@ -36,6 +36,12 @@
     width: 200px;
 }
 
+.error {
+    background-color: red;
+    height: 1px;
+    width: 1px;
+}
+
 /* .user {
     text-align: right;
     background-color: aqua;

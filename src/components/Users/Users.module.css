@@ -10,3 +10,15 @@
 .pagination span {
     margin: 3px;
 }
+
+.filterForm {
+    margin-right: 4px;
+}
+
+.form {
+    margin: 40px;
+}
+
+.heading {
+    margin-left: 40px;
+}
