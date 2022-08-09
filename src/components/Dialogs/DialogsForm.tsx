@@ -22,9 +22,10 @@ const DialogsForm: React.FC<PropsType> = (props) => {
       validationSchema={Yup.object({
         message: Yup.string().required('').max(5000, '')
       })}
-      onSubmit={(values, {setSubmitting}) => {
+      onSubmit={(values, {setSubmitting, resetForm}) => {
         props.sendMessage(values.message);
         setSubmitting(false);
+        resetForm();
       }}
     >
       <Form>

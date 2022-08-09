@@ -9,7 +9,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import s from './Login.module.css'
 // import { AppStateType } from "../../redux/redux-store";
-import { getCaptchaUrl, getError, getIsAuth } from "../../redux/authSelectors";
+import { getCaptchaUrl, getIsAuth } from "../../redux/authSelectors";
 import { AppDispatch } from "../../redux/redux-store";
 
 type LoginFormValues = {
@@ -22,16 +22,15 @@ type LoginFormValues = {
 const Login: React.FC = () => {
 
   const isAuth = useSelector(getIsAuth);
-  const errorMessage = useSelector(getError);
   const captchaUrl = useSelector(getCaptchaUrl);
   const dispatch = useDispatch<AppDispatch>();
-  
+
 
   if (isAuth) {
     return <Navigate replace to="/profile" />;
   }
 
-  const initialValues: LoginFormValues = { email: '', password: "", rememberMe: false, captcha: "",};
+  const initialValues: LoginFormValues = { email: '', password: "", rememberMe: false, captcha: "", };
 
   return (
     <div className={s.loginForm}>
@@ -46,42 +45,51 @@ const Login: React.FC = () => {
             .min(5, "Пароль должен включать минимум 5 символов")
             .required("Заполните форму"),
         })}
-        onSubmit={(values, { setSubmitting }) => {
+        onSubmit={(values, { setSubmitting, setStatus }) => {
           debugger
           dispatch(loginUser(
             values.email,
             values.password,
             values.rememberMe,
-            values.captcha
+            values.captcha,
+            setStatus
           ));
           setSubmitting(false);
         }}
       >
-        <Form>
+        {(formik) => <Form>
           <div className={s.form}>
             <label htmlFor="email">Email: </label>
             <Field name="email" type="text" placeholder="Email" />
-            <div className={s.error}><ErrorMessage name="email" /></div>
+            <ErrorMessage name="email">
+              {
+                (errorMsg) => <div className={s.error}>{errorMsg}</div>
+              }
+            </ErrorMessage>
           </div>
           <div className={s.form}>
             <label htmlFor="password">Пароль: </label>
             <Field name="password" type="password" placeholder="Пароль" />
-            <div className={s.error}><ErrorMessage name="password" /></div>
+            <ErrorMessage name="password">
+              {
+                (errorMsg) => <div className={s.error}>{errorMsg}</div>
+              }
+            </ErrorMessage>
           </div>
           <div className={s.form}>
-            <Field name="rememberMe" type="checkbox" />
+            <Field name="rememberMe" type="checkbox" /> Запомнить меня
           </div>
+          {captchaUrl ? 
           <div className={s.form}>
-            {captchaUrl && <img src={captchaUrl} />}
-            {captchaUrl && <Field name="captcha" type="text" />}
-          </div>
+            <img src={captchaUrl} />
+            <Field name="captcha" type="text" />
+          </div> : null}
+          {formik.status ? 
+          <div className={s.error}>{formik.status}</div> : null}
           <div>
-            {errorMessage && <div className={s.error}>{errorMessage}</div>}
+            <button type="submit" disabled={formik.isSubmitting}>Войти</button>
           </div>
-          <div>
-            <button type="submit">Войти</button>
-          </div>
-        </Form>
+        </Form>}
       </Formik>
     </div>
   );

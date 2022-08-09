@@ -9,7 +9,6 @@ let initialState = {
   login: null as string | null,
   isAuth: false,
   captchaUrl: null as string | null,
-  error: null as null | string
 };
 
 type InitialStateType = typeof initialState;
@@ -22,11 +21,6 @@ const authReducer = (state = initialState, action: ActionsTypes): InitialStateTy
         ...state,
         ...action.payload,
       };
-    case 'auth/SET_ERROR':
-      return {
-        ...state, 
-        ...action.payload,
-      }
     default:
       return state;
   }
@@ -45,10 +39,6 @@ export const actions = {
     type: 'auth/GET_CAPTCHA_URL_SUCCES',
     payload: { captchaUrl },
   } as const),
-  setError: (error: string) => ({
-    type: 'auth/SET_ERROR',
-    payload: { error },
-  } as const)
 }
 
 type ThunkType = ThunkAction<Promise<void> | Promise<string>, AppStateType, unknown, ActionsTypes>
@@ -61,15 +51,16 @@ export const getAuthUserData = (): ThunkType => async (dispatch) => {
   }
 };
 
-export const loginUser = (email: string, password: string, rememberMe: boolean, captcha: string | null): ThunkType => async (dispatch) => {
+export const loginUser = (email: string, password: string, rememberMe: boolean, 
+  captcha: string | null, setStatus: (status?: any) => void): ThunkType => async (dispatch) => {
   const data = await authAPI.login(email, password, rememberMe, captcha);
   if (data.resultCode === 0) {
     dispatch(getAuthUserData());
   } else if (data.resultCode === 10) {
     dispatch(getCaptchaUrl());
-  } 
+  }
   else {
-    dispatch(actions.setError(data.messages[0]));
+    setStatus(data.messages[0]);
   }
 };
 

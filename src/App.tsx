@@ -12,6 +12,7 @@ import { Provider } from "react-redux";
 import { FriendsType } from "./redux/navbarReducer";
 import { QueryParamProvider } from 'use-query-params';
 import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
+import 'antd/dist/antd.less';
 const ProfileContainer = React.lazy(() =>
   import("./components/Profile/ProfileContainer")
 );

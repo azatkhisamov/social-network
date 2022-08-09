@@ -1,7 +1,7 @@
 import { profileAPI } from "../api/api";
-import { stopSubmit } from "redux-form";
 import { ThunkAction } from "redux-thunk";
 import { AppStateType, InferActionsTypes } from "./redux-store";
+import React from "react";
 
 export type ContactsProfileType = {
   github: string | null
@@ -141,7 +141,7 @@ export const savePhoto = (imageFile: any): ThunkType => async (dispatch) => {
   }
 }
 
-export const updateProfileData = (profile: ProfileType): ThunkType => async (dispatch, getState) => {
+export const updateProfileData = (profile: ProfileType, setStatus: React.Dispatch<React.SetStateAction<null | string>>): ThunkType => async (dispatch, getState) => {
   const authID = getState().auth.id;
   const data = await profileAPI.updateProfileData(profile);
   if (data.resultCode === 0) {
@@ -152,10 +152,9 @@ export const updateProfileData = (profile: ProfileType): ThunkType => async (dis
       throw new Error("user's id can't be null")
     }
   }
-  // else {
-  //   dispatch(stopSubmit("update-profile", { _error: data.messages[0] || "Some error" }));
-  //   return Promise.reject();
-  // }
+  else {
+    setStatus(data.messages[0]);
+  }
 }
 
 export default profileReducer;

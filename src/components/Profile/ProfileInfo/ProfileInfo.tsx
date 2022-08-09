@@ -11,7 +11,7 @@ type PropsType = {
   profile: ProfileType | null
   updateStatus: (status: string) => void
   savePhoto: (imageFile: File) => void
-  updateProfileData: (profile: ProfileType) => void
+  updateProfileData: (profile: ProfileType, setStatus: React.Dispatch<React.SetStateAction<null | string>>) => void
   status: string
   authId: number | null
 }
@@ -22,11 +22,11 @@ type StateType = {
 const ProfileInfo: React.FC<PropsType> = (props: PropsType) => {
   let [editMode, setEditMode] = useState(false);
 
-  const updateProfile = (formData: ProfileType) => {
-    debugger;
-    props.updateProfileData(formData)
-    setEditMode(false);
-  };
+  // const updateProfile = (formData: ProfileType) => {
+  //   debugger;
+  //   props.updateProfileData(formData)
+  //   setEditMode(false);
+  // };
 
   if (!props.profile) {
     return <Preloader />;
@@ -65,9 +65,9 @@ const ProfileInfo: React.FC<PropsType> = (props: PropsType) => {
               />
             ) : (
               <UpdateProfileForm
-                onSubmit={updateProfile}
+                updateProfileData={props.updateProfileData}
                 initialValues={props.profile}
-                cancelUpdate={() => setEditMode(false)}
+                deactivateEditMode={() => setEditMode(false)}
                 profile={props.profile}
               />
             )}

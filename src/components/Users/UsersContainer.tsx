@@ -51,19 +51,20 @@ const UsersContainer: React.FC<PropsType> = (props) => {
 
   useEffect(() => {
     debugger
-    // let actualPage = props.currentPage;
-    // if (query.page) actualPage = query.page;
+    let actualPage = props.currentPage;
+    if (!!query.page) actualPage = query.page;
     let filter = {term: '', friend: null as null | boolean};
     if (!!query.term) filter = {...filter, term: query.term};
     if (query.friend !== undefined) filter = {...filter, friend: query.friend};
     props.requestUsers(
-      query.page || 1,
+      actualPage,
       props.countUsers,
       filter || props.filterUsers,
     );
   }, [query])
 
   useEffect(() => {
+    debugger
     let search: any = {};
     if (props.currentPage !== 1) search = { ...search, page: props.currentPage };
     if (props.filterUsers.term !== '') search = { ...search, term: props.filterUsers.term };
@@ -72,6 +73,7 @@ const UsersContainer: React.FC<PropsType> = (props) => {
   }, [props.currentPage])
 
   useEffect(() => {
+    debugger
     let search: any = {};
     search = { ...search, page: 1 };
     if (props.filterUsers.term !== '') search = { ...search, term: props.filterUsers.term };
@@ -80,14 +82,15 @@ const UsersContainer: React.FC<PropsType> = (props) => {
   }, [props.filterUsers])
 
 
-  useEffect(() => {
-    return () => {
-      props.setCurrentPage(1);
-      props.setFilterUsers('', null);
-    }
-  }, [])
+  // useEffect(() => {
+  //   return () => {
+  //     props.setCurrentPage(1);
+  //     props.setFilterUsers('', null);
+  //   }
+  // }, [])
 
   const onPaginationClick = (numberPage: number) => {
+    debugger
     props.requestUsers(numberPage, props.countUsers, props.filterUsers);
   }
 
@@ -102,6 +105,7 @@ const UsersContainer: React.FC<PropsType> = (props) => {
   const filterUsers = (term: string, friend: null | boolean) => {
     props.setFilterUsers(term, friend);
   }
+  debugger
   return (
     <React.Fragment>
       {props.isFetching ? (
@@ -146,4 +150,4 @@ export default connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppState
   unFollow,
   setCurrentPage: actions.setCurrentPage,
   setFilterUsers: actions.setFilterUsers
-})(React.memo(UsersContainer));
+})(UsersContainer);

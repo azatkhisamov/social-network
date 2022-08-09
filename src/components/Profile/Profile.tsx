@@ -8,7 +8,7 @@ type PropsType = {
   profile: ProfileType | null
   updateStatus: (status: string) => void
   savePhoto: (imageFile: any) => void
-  updateProfileData: (profile: ProfileType) => void
+  updateProfileData: (profile: ProfileType, setStatus: React.Dispatch<React.SetStateAction<null | string>>) => void
   status: string
   authId: number | null
 }

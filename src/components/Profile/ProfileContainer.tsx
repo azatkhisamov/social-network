@@ -25,7 +25,7 @@ type MapDispatchToPropsType = {
     getUserStatus: (userID: number) => void
     updateUserStatus: (status: string) => void
     savePhoto: (imageFile: any) => void
-    updateProfileData: (profile: ProfileType) => void
+    updateProfileData: (profile: ProfileType, setStatus: React.Dispatch<React.SetStateAction<null | string>>) => void
 }
 type OwnPropsType = {}
 type RouterParamsType = {

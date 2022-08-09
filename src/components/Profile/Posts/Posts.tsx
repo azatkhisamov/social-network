@@ -34,6 +34,7 @@ const Posts: React.FC<PropsType> = (props) => {
           onSubmit={(values, actions) => {
             props.addNewPost(values.post);
             actions.setSubmitting(false);
+            actions.resetForm();
           }}
         >
           <Form>
