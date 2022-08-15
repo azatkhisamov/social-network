@@ -120,6 +120,7 @@ export const requestUsers = (page: number, count: number, filterUsers: FilterUse
     dispatch(actions.setTotalCount(data.totalCount));
     dispatch(actions.setUsers(data.items));
     dispatch(actions.loading());
+    return Promise.resolve()
   };
 };
 

@@ -1,7 +1,8 @@
 .nav {
     grid-area: nav;
-    background-color: bisque;
-    min-height: 500px;
+    /* background-color: bisque; */
+    min-height: 700px;
+    text-align: center;
 }
 
 .item {
@@ -10,9 +11,10 @@
     font-size: 18px;
 }
 
-.item a {
-    color: black;
+.nav a {
     text-decoration: none;
+    outline: none;
+    color: white;
 }
 
 .friends {

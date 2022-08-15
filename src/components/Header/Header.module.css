@@ -11,3 +11,7 @@
   .auth {
     float: right
   }
+
+.header a {
+  text-decoration: none;
+}

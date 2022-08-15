@@ -1,6 +1,6 @@
 import React from "react";
 import s from "./Profile.module.css";
-import PostsContainer from "./Posts/PostsContainer";
+import Posts from "./Posts/Posts";
 import ProfileInfo from "./ProfileInfo/ProfileInfo";
 import { ProfileType } from "../../redux/profileReducer";
 
@@ -24,7 +24,7 @@ const Profile: React.FC<PropsType> = React.memo((props: PropsType) => {
         savePhoto={props.savePhoto}
         updateProfileData={props.updateProfileData}
       />
-      <PostsContainer />
+      <Posts />
     </div>
   );
 });

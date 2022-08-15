@@ -57,14 +57,14 @@
 .contact {
     margin-left: 10px;
 }
-
+/* 
 .form label {
     font-weight: bold;
     display: flex;
     margin-bottom: 5px;
-}
+}  */
 
-.form input[type='text'], .form input[type='password'] {
+/* .form input[type='text'], .form input[type='password'] {
     display: block;
     width: 300px;
     padding: 6px 12px;
@@ -75,8 +75,12 @@
     background-image: none;
     border: 1px solid #ccc;
     border-radius: 4px;
-}
+} */
 
 .error {
     color: rgb(199, 21, 21)
+}
+
+.form {
+    margin-bottom: 20px;
 }

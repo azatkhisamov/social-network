@@ -5,6 +5,7 @@ import Pagination from "./Pagination";
 import { UsersType } from "../../redux/usersReducer";
 import FilterUsersForm from "./FilterUsersForm";
 import { DecodedValueMap } from "use-query-params";
+import { Box, Typography } from "@mui/material";
 
 type PropsType = {
   users: Array<UsersType>
@@ -24,9 +25,9 @@ type PropsType = {
 const Users: React.FC<PropsType> = (props: PropsType) => {
   
   return (
-    <div>
+    <Box>
       <div className={s.heading}>
-        <h2>Пользователи</h2>
+        <Typography variant="h4" gutterBottom component="div">Пользователи</Typography>
       </div>
       <div className={s.form}>
         <FilterUsersForm filterUsers={props.filterUsers} isAuth={props.isAuth} query={props.query} />
@@ -47,8 +48,7 @@ const Users: React.FC<PropsType> = (props: PropsType) => {
           authID={props.authID}
         />
       ))}
-      <button>Show more</button>
-    </div>
+    </Box>
   );
 };
 

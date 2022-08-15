@@ -4,6 +4,8 @@ import s from "./Dialogs.module.css";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from 'yup';
 import { Input } from 'antd';
+import { Button, Stack } from "@mui/material";
+import TextareaForm from "../../utils/Forms/TextareaForm";
 
 type PropsType = {
   sendMessage: (message: string) => void
@@ -15,27 +17,31 @@ type DialogsFormValues = {
 
 const DialogsForm: React.FC<PropsType> = (props) => {
 
-  const initialValues: DialogsFormValues = {message: ''};
-  return(
-    <Formik 
+  const initialValues: DialogsFormValues = { message: '' };
+  return (
+    <Formik
       initialValues={initialValues}
       validationSchema={Yup.object({
         message: Yup.string().required('').max(5000, '')
       })}
-      onSubmit={(values, {setSubmitting, resetForm}) => {
+      onSubmit={(values, { setSubmitting, resetForm }) => {
         props.sendMessage(values.message);
         setSubmitting(false);
         resetForm();
       }}
     >
       <Form>
-        <div>
-          <Field name='message' as={Input} placeholder='Введите сообщение' autoSize={{minRows: 3,maxRows: 5,}} />
+        <Stack spacing={2} alignItems="baseline">
+          <TextareaForm name='message' label='Новое сообщение' type='text' />
+          <Button variant="contained" type="submit">Отправить</Button>
+        </Stack>
+        {/* <div>
+          <Field name='message' as={Input} placeholder='Введите сообщение' autoSize={{ minRows: 3, maxRows: 5, }} />
           <ErrorMessage name='message' className={s.error} />
         </div>
         <div>
           <button type='submit'>Отправить</button>
-        </div>
+        </div> */}
       </Form>
     </Formik>
   )

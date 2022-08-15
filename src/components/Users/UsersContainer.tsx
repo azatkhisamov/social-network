@@ -1,47 +1,24 @@
-import React, { useEffect } from "react";
-import { connect } from "react-redux";
+import React, { useEffect, useLayoutEffect } from "react";
+import { connect, useDispatch, useSelector } from "react-redux";
 import {
   requestUsers,
   follow,
   unFollow,
-  actions, // чекнуть потом
-  UsersType,
-  FilterUsersType,
+  actions
 } from "../../redux/usersReducer";
 import Users from "./Users";
 import Preloader from "../common/Preloader/Preloader";
 import { getCountUsers, getCurrentPage, getFollowingInProgress, getIsFetching, getTotalCount, getUsers, getFilterUsers } from "../../redux/usersSelectors";
-import { AppStateType } from "../../redux/redux-store";
+import { AppDispatch } from "../../redux/redux-store";
 import {
   useQueryParams,
   StringParam,
   NumberParam,
   BooleanParam,
 } from 'use-query-params';
+import { getAuthId, getIsAuth } from "../../redux/authSelectors";
 
-
-type MapStateToPropsType = {
-  users: Array<UsersType>
-  currentPage: number
-  totalCount: number
-  countUsers: number
-  followingInProgress: Array<number>
-  isFetching: boolean
-  authID: number | null
-  isAuth: boolean
-  filterUsers: FilterUsersType
-}
-type MapDispatchToPropsType = {
-  requestUsers: (page: number, count: number, filterUsers: FilterUsersType) => void
-  follow: (userID: number) => void
-  unFollow: (userID: number) => void
-  setCurrentPage: (numberPage: number) => void //чекнуть потом
-  setFilterUsers: (term: string, friend: null | boolean) => void //чекнуть потом
-}
-
-type PropsType = MapStateToPropsType & MapDispatchToPropsType;
-
-const UsersContainer: React.FC<PropsType> = (props) => {
+const UsersContainer: React.FC = () => {
 
   const [query, setQuery] = useQueryParams({
     page: NumberParam,
@@ -49,80 +26,107 @@ const UsersContainer: React.FC<PropsType> = (props) => {
     friend: BooleanParam
   });
 
+  const users = useSelector(getUsers);
+  const currentPage = useSelector(getCurrentPage);
+  const totalCount = useSelector(getTotalCount);
+  const countUsers = useSelector(getCountUsers);
+  const followingInProgress = useSelector(getFollowingInProgress);
+  const isFetching = useSelector(getIsFetching);
+  const filter = useSelector(getFilterUsers);
+  const authID = useSelector(getAuthId);
+  const isAuth = useSelector(getIsAuth);
+  const dispatch = useDispatch<AppDispatch>();
+
+
   useEffect(() => {
     debugger
-    let actualPage = props.currentPage;
+    let actualPage = currentPage;
     if (!!query.page) actualPage = query.page;
-    let filter = {term: '', friend: null as null | boolean};
-    if (!!query.term) filter = {...filter, term: query.term};
-    if (query.friend !== undefined) filter = {...filter, friend: query.friend};
-    props.requestUsers(
+    let queryFilter = { term: '', friend: null as null | boolean };
+    // let queryFilter = filter;
+    if (!!query.term) queryFilter = { ...queryFilter, term: query.term };
+    if (query.friend || query.friend === false) queryFilter = { ...queryFilter, friend: query.friend };
+    dispatch(requestUsers(
       actualPage,
-      props.countUsers,
-      filter || props.filterUsers,
-    );
+      countUsers,
+      queryFilter || filter,
+    ));
   }, [query])
 
   useEffect(() => {
     debugger
-    let search: any = {};
-    if (props.currentPage !== 1) search = { ...search, page: props.currentPage };
-    if (props.filterUsers.term !== '') search = { ...search, term: props.filterUsers.term };
-    if (props.filterUsers.friend !== null) search = { ...search, friend: props.filterUsers.friend };
-    setQuery(search, 'push')
-  }, [props.currentPage])
+    if (totalCount) {
+      let search: any = {};
+      if (currentPage !== 1) search = { ...search, page: currentPage };
+      if (filter.term !== '') search = { ...search, term: filter.term };
+      if (filter.friend !== null
+      ) search = { ...search, friend: filter.friend };
+      setQuery(search, 'push')
+    }
+  }, [currentPage])
 
   useEffect(() => {
     debugger
-    let search: any = {};
-    search = { ...search, page: 1 };
-    if (props.filterUsers.term !== '') search = { ...search, term: props.filterUsers.term };
-    if (props.filterUsers.friend !== null) search = { ...search, friend: props.filterUsers.friend };
-    setQuery(search, 'push')
-  }, [props.filterUsers])
+    if (totalCount) {
+      let search: any = {};
+      // search = { ...search, page: 1 };
+      // dispatch(actions.setCurrentPage(1));
+      if (filter.term !== '') search = { ...search, term: filter.term };
+      if (filter.friend !== null) search = { ...search, friend: filter.friend };
+      setQuery(search, 'push')
+    }
+  }, [filter])
+
+  useEffect(() => {
+    debugger
+    dispatch(actions.setCurrentPage(query.page || 1));
+    filterUsers(query.term || "", query.friend ? true : query.friend === false ? false : null);
+  }, [])
 
 
-  // useEffect(() => {
-  //   return () => {
-  //     props.setCurrentPage(1);
-  //     props.setFilterUsers('', null);
-  //   }
-  // }, [])
+  useEffect(() => {
+    return () => {
+      dispatch(actions.setCurrentPage(1));
+      dispatch(actions.setFilterUsers('', null));
+    }
+  }, [])
 
   const onPaginationClick = (numberPage: number) => {
     debugger
-    props.requestUsers(numberPage, props.countUsers, props.filterUsers);
+    // props.requestUsers(numberPage, props.countUsers, props.filterUsers);
+    dispatch(actions.setCurrentPage(numberPage));
   }
 
   const followUser = (userID: number) => {
-    props.follow(userID);
+    dispatch(follow(userID))
   }
 
   const unFollowUser = (userID: number) => {
-    props.unFollow(userID);
+    dispatch(unFollow(userID))
   }
 
   const filterUsers = (term: string, friend: null | boolean) => {
-    props.setFilterUsers(term, friend);
+    dispatch(actions.setCurrentPage(1));
+    dispatch(actions.setFilterUsers(term, friend));
   }
   debugger
   return (
     <React.Fragment>
-      {props.isFetching ? (
+      {isFetching ? (
         <Preloader />
       ) : (
         <Users
-          users={props.users}
-          currentPage={props.currentPage}
-          totalCount={props.totalCount}
-          countUsers={props.countUsers}
-          followingInProgress={props.followingInProgress}
-          onPaginationClick={onPaginationClick} //
-          followUser={followUser} //
-          unFollowUser={unFollowUser} //
-          authID={props.authID}
-          filterUsers={filterUsers} //
-          isAuth={props.isAuth}
+          users={users}
+          currentPage={currentPage}
+          totalCount={totalCount}
+          countUsers={countUsers}
+          followingInProgress={followingInProgress}
+          onPaginationClick={onPaginationClick}
+          followUser={followUser}
+          unFollowUser={unFollowUser}
+          authID={authID}
+          filterUsers={filterUsers}
+          isAuth={isAuth}
           query={query}
         />
       )}
@@ -130,24 +134,5 @@ const UsersContainer: React.FC<PropsType> = (props) => {
   );
 }
 
-const mapStateToProps = (state: AppStateType): MapStateToPropsType => {
-  return {
-    users: getUsers(state),
-    currentPage: getCurrentPage(state),
-    totalCount: getTotalCount(state),
-    countUsers: getCountUsers(state),
-    followingInProgress: getFollowingInProgress(state),
-    isFetching: getIsFetching(state),
-    authID: state.auth.id,
-    isAuth: state.auth.isAuth,
-    filterUsers: getFilterUsers(state),
-  };
-};
+export default UsersContainer;
 
-export default connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppStateType>(mapStateToProps, {
-  requestUsers,
-  follow,
-  unFollow,
-  setCurrentPage: actions.setCurrentPage,
-  setFilterUsers: actions.setFilterUsers
-})(UsersContainer);

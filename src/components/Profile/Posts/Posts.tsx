@@ -1,6 +1,7 @@
 import React from "react";
 import Post from "./Post/Post";
 import s from "./Posts.module.css";
+import { actions } from "../../../redux/profileReducer";
 import {
   Formik,
   Form,
@@ -8,18 +9,23 @@ import {
   ErrorMessage
 } from 'formik';
 import * as Yup from 'yup';
-import { PostDataType } from "../../../redux/profileReducer";
+import { Avatar, Button } from "@mui/material";
+import TextareaForm from "../../../utils/Forms/TextareaForm";
+import { Stack } from "@mui/system";
+import { deepOrange } from '@mui/material/colors';
+import { useDispatch, useSelector } from "react-redux";
+import { getAvatar, getPosts } from "../../../redux/profileSelectors";
+import { AppDispatch } from "../../../redux/redux-store";
 
 type PostValuesType = {
   post: string;
 }
 
-type PropsType = {
-  posts: Array<PostDataType>
-  addNewPost: (post: string) => void
-}
+const Posts: React.FC = () => {
 
-const Posts: React.FC<PropsType> = (props) => {
+  const posts = useSelector(getPosts);
+  const avatar = useSelector(getAvatar);
+  const dispatch = useDispatch<AppDispatch>();
 
   const initialValues: PostValuesType = { post: '' };
 
@@ -31,24 +37,29 @@ const Posts: React.FC<PropsType> = (props) => {
           validationSchema={Yup.object({
             post: Yup.string().required('').max(5000, 'Слишком много символов')
           })}
-          onSubmit={(values, actions) => {
-            props.addNewPost(values.post);
-            actions.setSubmitting(false);
-            actions.resetForm();
+          onSubmit={(values, actionsSubmit) => {
+            dispatch(actions.addNewPost(values.post))
+            actionsSubmit.setSubmitting(false);
+            actionsSubmit.resetForm();
           }}
         >
           <Form>
-            <div>
-              <Field name='post' as='textarea' placeholder='Напишите пост' />
-              <ErrorMessage name='post' className={s.error} />
-            </div>
-            <div>
-              <button type="submit">Добавить</button>
-            </div>
+            <Stack spacing={2} alignItems="baseline">
+              <Stack direction="row" spacing={1}>
+                {avatar ? <Avatar src={avatar} sx={{ width: 70, height: 70 }} /> 
+                : <Avatar
+                sx={{ bgcolor: deepOrange[500] }}
+                alt="Remy Sharp"
+                src="/broken-image.jpg"
+              />}
+                <TextareaForm name='post' label='Новый пост' type='text' />
+              </Stack>      
+              <Button variant="contained" type="submit">Добавить</Button>
+            </Stack>
           </Form>
         </Formik>
       </div>
-      {props.posts
+      {posts
         .map((item) => <Post key={item.id} message={item.message} />)
         .reverse()}
     </div>

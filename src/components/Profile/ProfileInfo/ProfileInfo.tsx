@@ -34,7 +34,7 @@ const ProfileInfo: React.FC<PropsType> = (props: PropsType) => {
 
   return (
     <React.Fragment>
-      <div className={s.imageHead}></div>
+      {/* <div className={s.imageHead}></div> */}
       <div className={s.info}>
         <div className={s.avatar}>
           <Avatar

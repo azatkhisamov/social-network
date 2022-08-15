@@ -33,24 +33,26 @@ const Dialogs: React.FC<PropsType> = (props: PropsType) => {
   // }
 
   return (
-    <div className={s.dialogs}>
-      <div className={s.dialogsItems}>
-        {props.dialogsData.map((item) => (
-          <DialogItem
-            key={item.id}
-            name={item.name}
-            urlId={item.id}
-            imgUrl={item.imgUrl}
-          />
-        ))}
+    <>
+      <div className={s.dialogs}>
+        <div className={s.dialogsItems}>
+          {props.dialogsData.map((item) => (
+            <DialogItem
+              key={item.id}
+              name={item.name}
+              urlId={item.id}
+              imgUrl={item.imgUrl}
+            />
+          ))}
+        </div>
+        <div className={s.messages}>
+          {props.messagesData.map((item) => (
+            <Message key={item.id} message={item.message} writer={item.writer} />
+          ))}
+        </div>
       </div>
-      <div className={s.messages}>
-        {props.messagesData.map((item) => (
-          <Message key={item.id} message={item.message} writer={item.writer} />
-        ))}
-      </div>
-      <DialogsForm sendMessage={props.sendMessage}/>
-    </div>
+      <DialogsForm sendMessage={props.sendMessage} />
+    </>
   );
 };
 

@@ -3,6 +3,9 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { ProfileType } from "../../../../redux/profileReducer";
 import s from "../ProfileInfo.module.css";
+import InputForm from "../../../../utils/Forms/InputForm";
+import CheckboxForm from "../../../../utils/Forms/CheckboxForm";
+import { Button, Stack } from "@mui/material";
 
 type PropsType = {
   initialValues: ProfileType
@@ -31,7 +34,7 @@ const validation = Yup.object({
 const UpdateProfileForm: React.FC<PropsType> = (props) => {
 
   const [status, setStatus] = useState(null as null | string);
-
+  debugger
   return (
     <>
       <Formik initialValues={props.initialValues}
@@ -47,58 +50,63 @@ const UpdateProfileForm: React.FC<PropsType> = (props) => {
         {formik =>
           <Form>
             <div className={s.form}>
-              <label htmlFor="aboutMe">О себе:</label>
+              {/* <label htmlFor="aboutMe">О себе:</label>
               <Field name="aboutMe" type="text" placeholder="О себе" />
               <ErrorMessage name="aboutMe">
                 {
                   (errorMsg) => <div className={s.error}>{errorMsg}</div>
                 }
-              </ErrorMessage>
+              </ErrorMessage> */}
+              <InputForm name='aboutMe' label="О себе" type="text" />
             </div>
             <div className={s.form}>
-              <label htmlFor="fullName">Полное имя:</label>
+              {/* <label htmlFor="fullName">Полное имя:</label>
               <Field name="fullName" type="text" placeholder="Полное имя" />
               <ErrorMessage name="fullName">
                 {
                   (errorMsg) => <div className={s.error}>{errorMsg}</div>
                 }
-              </ErrorMessage>
+              </ErrorMessage> */}
+              <InputForm name='fullName' label="Полное имя" type="text" />
             </div>
             <div className={s.form}>
-              <label htmlFor="lookingForAJob">Поиск работы:</label>
-              <Field name="lookingForAJob" type="checkbox" />
+              {/* <label htmlFor="lookingForAJob">Поиск работы:</label>
+              <Field name="lookingForAJob" type="checkbox" /> */}
+              <CheckboxForm name='lookingForAJob' label="Поиск работы" type="checkbox" />
             </div>
             <div className={s.form}>
-              <label htmlFor="lookingForAJobDescription">Профессиональные умения:</label>
+              {/* <label htmlFor="lookingForAJobDescription">Профессиональные умения:</label>
               <Field name="lookingForAJobDescription" as='textarea' placeholder="Профессиональные умения" />
               <ErrorMessage name="lookingForAJobDescription">
                 {
                   (errorMsg) => <div className={s.error}>{errorMsg}</div>
                 }
-              </ErrorMessage>
+              </ErrorMessage> */}
+              <InputForm name='lookingForAJobDescription' label="Профессиональные умения" type="text" />
             </div>
             <div>
               <b>Контакты: </b>
               {Object.keys(props.profile.contacts).map(contact => {
                 return <div className={s.form} key={contact}>
-                  <label htmlFor={"contacts." + contact}>{contact}</label>
+                  {/* <label htmlFor={"contacts." + contact}>{contact}</label>
                   <Field name={"contacts." + contact} type='text' placeholder={contact} />
                   <ErrorMessage name={"contacts." + contact}>
                     {
                       (errorMsg) => <div className={s.error}>{errorMsg}</div>
                     }
-                  </ErrorMessage>
+                  </ErrorMessage> */}
+                  <InputForm name={"contacts." + contact} label={contact} type="text" />
                 </div>
               })}
             </div>
-            <div>
-              <button type="submit" disabled={formik.isSubmitting}>Сохранить</button>
-            </div>
+            <Stack direction="row" spacing={2}>
+              <Button type="submit" variant="contained" color="success" disabled={formik.isSubmitting}>Сохранить</Button>
+              <Button variant="contained" color="error" onClick={props.deactivateEditMode}>
+                Отмена
+              </Button>
+            </Stack>
           </Form>}
       </Formik>
-      <button onClick={props.deactivateEditMode}>
-        Отмена
-      </button>
     </>
   );
 };

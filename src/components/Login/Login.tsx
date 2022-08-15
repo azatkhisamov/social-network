@@ -1,16 +1,16 @@
 import React from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router";
-// import { Field, reduxForm } from "redux-form";
 import { loginUser } from "../../redux/authReducer";
-// import { Input } from "../../utils/FormControls/FormControls";
-// import { required, maxLengthCreator } from "../../utils/validators";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field} from "formik";
 import * as Yup from "yup";
 import s from './Login.module.css'
-// import { AppStateType } from "../../redux/redux-store";
 import { getCaptchaUrl, getIsAuth } from "../../redux/authSelectors";
 import { AppDispatch } from "../../redux/redux-store";
+import InputForm from "../../utils/Forms/InputForm";
+import CheckboxForm from "../../utils/Forms/CheckboxForm";
+import { Button } from "@mui/material";
+import PasswordForm from "../../utils/Forms/PasswordForm";
 
 type LoginFormValues = {
   email: string
@@ -59,25 +59,13 @@ const Login: React.FC = () => {
       >
         {(formik) => <Form>
           <div className={s.form}>
-            <label htmlFor="email">Email: </label>
-            <Field name="email" type="text" placeholder="Email" />
-            <ErrorMessage name="email">
-              {
-                (errorMsg) => <div className={s.error}>{errorMsg}</div>
-              }
-            </ErrorMessage>
+            <InputForm name='email' type='text' label="Email" />
           </div>
           <div className={s.form}>
-            <label htmlFor="password">Пароль: </label>
-            <Field name="password" type="password" placeholder="Пароль" />
-            <ErrorMessage name="password">
-              {
-                (errorMsg) => <div className={s.error}>{errorMsg}</div>
-              }
-            </ErrorMessage>
+            <PasswordForm name='password' label="Пароль" />
           </div>
           <div className={s.form}>
-            <Field name="rememberMe" type="checkbox" /> Запомнить меня
+            <CheckboxForm name='rememberMe' type='checkbox' label='Запомнить меня' />
           </div>
           {captchaUrl ? 
           <div className={s.form}>
@@ -87,61 +75,12 @@ const Login: React.FC = () => {
           {formik.status ? 
           <div className={s.error}>{formik.status}</div> : null}
           <div>
-            <button type="submit" disabled={formik.isSubmitting}>Войти</button>
+            <Button variant="contained" type="submit" disabled={formik.isSubmitting}>Войти</Button>
           </div>
         </Form>}
       </Formik>
     </div>
   );
 };
-
-// const maxLength30 = maxLengthCreator(30);
-
-// let LoginForm = (props) => {
-//   return (
-//     <form onSubmit={props.handleSubmit}>
-//       <div>
-//         <Field name="email" component={Input} placeholder="email" validate={[required, maxLength30]}/>
-//       </div>
-//       <div>
-//         <Field name="password" component={Input} type="password" placeholder="password" validate={[required, maxLength30]}/>
-//       </div>
-//       <div>
-//         <Field name="rememberMe" component={"input"} type="checkbox" /> remember me
-//       </div>
-//       {props.captchaUrl && <img src={props.captchaUrl} />}
-//       {props.captchaUrl && <Field name="captcha" component={Input} validate={[required]} />}
-//       {props.error && <div>{props.error}</div>}
-//       <div>
-//         <button>Login</button>
-//       </div>
-//     </form>
-//   );
-// };
-
-// LoginForm = reduxForm({
-//   form: "login",
-// })(LoginForm);
-
-// const Login = (props) => {
-//   const onSubmit = (formData) => {
-//     let { email, password, rememberMe, captcha } = formData;
-//     props.loginUser(email, password, rememberMe, captcha);
-//     formData.email = "";
-//     formData.password = "";
-//     formData.rememberMe = false;
-//   };
-//   if (props.isAuth) {
-//     return <Navigate replace to="/profile" />;
-//   }
-//   return (
-//     <div>
-//       <h1>Login</h1>
-//       <LoginForm onSubmit={onSubmit} captchaUrl={props.captchaUrl} />
-//     </div>
-//   );
-// };
-
-
 
 export default Login;

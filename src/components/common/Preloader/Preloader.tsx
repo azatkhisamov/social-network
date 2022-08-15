@@ -1,9 +1,10 @@
 import React from "react";
 import loadingGIF from '../../../assets/images/Loading.gif';
+import s from "./Preloader.module.css";
 
 type PropsType = {}
 const Preloader: React.FC<PropsType> = () => {
-    return <div><img src={loadingGIF}/></div>
+    return <div className={s.preloader}><img src={loadingGIF}/></div>
 }
 
 export default Preloader;

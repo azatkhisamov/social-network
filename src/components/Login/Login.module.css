@@ -7,7 +7,7 @@
     margin: 10px 0px 0px 0px;
 }
 
-.form label {
+/* .form label {
     font-weight: bold;
     display: flex;
     margin-bottom: 5px;
@@ -24,7 +24,7 @@
     background-image: none;
     border: 1px solid #ccc;
     border-radius: 4px;
-}
+} */
 
 .error {
     color: rgb(199, 21, 21)

@@ -1,4 +1,3 @@
-// import { stopSubmit } from "redux-form";
 import { ThunkAction } from "redux-thunk";
 import { authAPI, securityAPI } from "../api/api";
 import { AppStateType, InferActionsTypes } from "./redux-store";

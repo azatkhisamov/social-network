@@ -12,7 +12,7 @@ import { Provider } from "react-redux";
 import { FriendsType } from "./redux/navbarReducer";
 import { QueryParamProvider } from 'use-query-params';
 import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
-import 'antd/dist/antd.less';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 const ProfileContainer = React.lazy(() =>
   import("./components/Profile/ProfileContainer")
 );
@@ -23,6 +23,7 @@ const UsersContainer = React.lazy(() =>
   import("./components/Users/UsersContainer")
 );
 const Login = React.lazy(() => import("./components/Login/Login"));
+const Chat = React.lazy(() => import("./components/Chat/Chat"));
 
 type PropsType = {
   initialized: boolean
@@ -30,6 +31,17 @@ type PropsType = {
   friends: Array<FriendsType>
   initialize: () => void
 }
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#009688',
+    },
+    secondary: {
+      main: "#5c6bc0",
+    },
+  },
+});
 
 const App: React.FC<PropsType> = (props) => {
   useEffect(() => {
@@ -44,8 +56,10 @@ const App: React.FC<PropsType> = (props) => {
     <BrowserRouter>
       <QueryParamProvider adapter={ReactRouter6Adapter}>
         <div className="app-wrapper">
-          <HeaderContainer />
-          <Navbar isAuth={props.isAuth} friends={props.friends} />
+          <ThemeProvider theme={theme}>
+            <HeaderContainer />
+            <Navbar isAuth={props.isAuth} friends={props.friends} />
+          </ThemeProvider>
           <div className="app-wrapper-content">
             <React.Suspense fallback={<Preloader />}>
               <Routes>
@@ -58,6 +72,7 @@ const App: React.FC<PropsType> = (props) => {
                 <Route path="/dialogs" element={<DialogsContainer />} />
                 <Route path="/users" element={<UsersContainer />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/chat" element={<Chat />} />
               </Routes>
             </React.Suspense>
           </div>
