@@ -22,24 +22,20 @@ const Header: React.FC<PropsType> = (props) => {
     }
 
     return (
-        <header className={s.header}>
-            <Box sx={{ flexGrow: 1 }}>
-                <AppBar position="static" color='primary'>
-                    <Toolbar>
-                        <img src='https://static.rfstat.com/renderforest/images/v2/logo-homepage/gradient_3.png' />
-                        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                            Social network
-                        </Typography>
-                        <div className={s.auth}>
-                            {props.isAuth ? <Button variant="contained" color='secondary' size='small' onClick={logout}>Выйти</Button> :
-                                <NavLink to='/login'>
-                                    <Button variant="contained" color='secondary' size='small'>Login</Button>
-                                </NavLink>}
-                        </div>
-                    </Toolbar>
-                </AppBar>
-            </Box>
-        </header>
+            <AppBar position="sticky" color='primary'>
+                <Toolbar>
+                    <img style={{width: '50px'}} src='https://static.rfstat.com/renderforest/images/v2/logo-homepage/gradient_3.png' />
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                        Social network
+                    </Typography>
+                    <div className={s.auth}>
+                        {props.isAuth ? <Button variant="text" color='inherit' size='small' onClick={logout}>Выйти</Button> :
+                            <NavLink to='/login' style={{textDecoration: 'none', outline: 'none', color: 'white'}}>
+                                <Button variant="text" color='inherit' size='small'>Login</Button>
+                            </NavLink>}
+                    </div>
+                </Toolbar>
+            </AppBar>
         // <header className={s.header}>
         //     <img src='https://static.rfstat.com/renderforest/images/v2/logo-homepage/gradient_3.png' />
         //     <div className={s.auth}>

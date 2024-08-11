@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import s from "./Users.module.css";
-import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 
@@ -11,8 +10,8 @@ type PropsType = {
   currentPage: number
 }
 
-const PaginationControlled: React.FC<PropsType> = (props: PropsType) => {
-  
+const PaginationControlled: React.FC<PropsType> = React.memo((props: PropsType) => {
+
   let amountPages = Math.ceil(props.totalCount / props.countUsers);
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     props.onPaginationClick(value);
@@ -20,11 +19,12 @@ const PaginationControlled: React.FC<PropsType> = (props: PropsType) => {
 
   return (
     <div className={s.pagination}>
-      <Stack spacing={2}>
-        <Pagination count={amountPages} page={props.currentPage} onChange={handleChange} />
+      <Stack spacing={3}>
+        <Pagination count={amountPages} page={props.currentPage} onChange={handleChange}
+          color="primary" variant="outlined" shape="rounded" />
       </Stack>
     </div>
   );
-};
+});
 
 export default PaginationControlled;

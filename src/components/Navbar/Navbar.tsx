@@ -1,75 +1,89 @@
-import React from "react";
+import React, { useEffect } from "react";
 import s from './Navbar.module.css'
 import { NavLink } from "react-router-dom"
-import Friends from "./Friends/Friends";
-import { FriendsType } from "../../redux/navbarReducer";
-import Button from '@mui/material/Button';
-import AppBar from '@mui/material/AppBar';
+import { requestFriends } from "../../redux/navbarReducer";
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import { Stack } from "@mui/material";
+import { Avatar, AvatarGroup, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack } from "@mui/material";
+import HomeIcon from '@mui/icons-material/Home';
+import EmailIcon from '@mui/icons-material/Email';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import ChatIcon from '@mui/icons-material/Chat';
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, AppStateType } from "../../redux/redux-store";
+import { getIsAuth } from "../../redux/authSelectors";
+import CircularProgress from '@mui/material/CircularProgress';
 
-type PropsType = {
-  isAuth: boolean
-  friends: Array<FriendsType>
-}
 
-const Navbar: React.FC<PropsType> = (props) => {
+const Navbar: React.FC = React.memo(() => {
+  const dispatch = useDispatch<AppDispatch>();
+  const isAuth = useSelector(getIsAuth);
+  const totalCountFriends = useSelector((state: AppStateType) => state.navbar.totalCountFriends);
+  const isFetching = useSelector((state: AppStateType) => state.navbar.isFetching);
+  const changingFriends = useSelector((state: AppStateType) => state.usersPage.changingFriends);
+  const friends = useSelector((state: AppStateType) => state.navbar.friends);
+
+  useEffect(() => {
+    debugger
+    dispatch(requestFriends());
+  }, [changingFriends, isAuth])
+
   return (
-    <nav className={s.nav}>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static" color='primary' >
-          <Toolbar>
-            <Stack spacing={3} sx={{marginTop: 5, marginBottom: 5}}>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                <NavLink to={`/profile`}>Профиль</NavLink>
-              </Typography>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                <NavLink to='/dialogs'>Сообщения</NavLink>
-              </Typography>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                <NavLink to='/users'>Пользователи</NavLink>
-              </Typography>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                <NavLink to='/chat'>Общий чат</NavLink>
-              </Typography>
-              {props.isAuth && <>
-                <Typography variant="h6" component="div">Friends</Typography>
-                <div className={s.friends}>
-                  {props.friends.map(item => <Friends key={item.id} avatarUrl={item.avatarUrl} name={item.name} />)}
-                </div></>}
-            </Stack>
-          </Toolbar>
-        </AppBar>
-      </Box>
-      {/* <div className={s.item}>
-        <NavLink to={`/profile`}>Профиль</NavLink>
+    <Box flex={2} p={2}>
+      <div className={s.nav}>
+        <List>
+          <NavLink to={`/profile`}>
+            <ListItem>
+              <ListItemButton>
+                <ListItemIcon>
+                  <HomeIcon />
+                </ListItemIcon>
+                <ListItemText primary='Профиль' />
+              </ListItemButton>
+            </ListItem>
+          </NavLink>
+          <NavLink to={`/dialogs`}>
+            <ListItem>
+              <ListItemButton>
+                <ListItemIcon>
+                  <EmailIcon />
+                </ListItemIcon>
+                <ListItemText primary='Сообщения' />
+              </ListItemButton>
+            </ListItem>
+          </NavLink>
+          <NavLink to={`/users`}>
+            <ListItem>
+              <ListItemButton>
+                <ListItemIcon>
+                  <PeopleAltIcon />
+                </ListItemIcon>
+                <ListItemText primary='Пользователи' />
+              </ListItemButton>
+            </ListItem>
+          </NavLink>
+          <NavLink to={`/chat`}>
+            <ListItem>
+              <ListItemButton>
+                <ListItemIcon>
+                  <ChatIcon />
+                </ListItemIcon>
+                <ListItemText primary='Общий чат' />
+              </ListItemButton>
+            </ListItem>
+          </NavLink>
+        </List>
+        {(isAuth && !!friends.length) && (isFetching ?
+          <CircularProgress /> :
+          <>
+            <Typography variant="h6" component="div">Подписчики</Typography>
+            <AvatarGroup sx={{justifyContent: "center", marginTop: '15px'}} total={totalCountFriends}>
+              {friends.map((friend) => <NavLink to={`/profile/${friend.id}`} key={friend.id}><Avatar alt={friend.name} src={friend.photos?.large ? friend.photos?.large : undefined} /></NavLink>)}
+            </AvatarGroup>
+          </>)}
       </div>
-      <div className={s.item}>
-        <NavLink to='/dialogs'>Сообщения</NavLink>
-      </div>
-      <div className={s.item}>
-        <NavLink to='/users'>Пользователи</NavLink>
-      </div>
-      <div className={s.item}>
-        <NavLink to='/chat'>Общий чат</NavLink>
-      </div>
-      <div className={s.item}>
-        <a href='/feed'>Новости</a>
-      </div>
-      <div className={s.item}>
-        <a href='/music'>Музыка</a>
-      </div>
-      <div className={s.item}>
-        <a href='/settings'>Настройки</a>
-      </div>
-      {props.isAuth && <h2>Friends</h2><div className={s.friends}>
-        {props.friends.map(item => <Friends key={item.id} avatarUrl={item.avatarUrl} name={item.name} />)}
-      </div>} */}
-    </nav>
+    </Box >
   );
-};
+});
 
 export default Navbar;

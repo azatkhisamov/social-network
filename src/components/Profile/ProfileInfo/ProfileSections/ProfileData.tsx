@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { Button, Typography } from "@mui/material";
+import { Stack } from "@mui/system";
+import React from "react";
 import { ContactsProfileType, ProfileType } from "../../../../redux/profileReducer";
 import s from "../ProfileInfo.module.css";
 import Contact from "./Contact";
@@ -9,37 +11,36 @@ type PropsType = {
   activateEditMode: () => void
 }
 
-const ProfileData: React.FC<PropsType> = (props: PropsType) => {
+const ProfileData: React.FC<PropsType> = React.memo((props: PropsType) => {
   return (
-    <>
-      <div>
+    <Stack spacing={0.5} alignItems="flex-start">
+      <Typography variant="subtitle2" sx={{fontSize: '18px'}}>
         <b>Поиск работы: </b>
         {props.profile.lookingForAJob ? "Да" : "Нет"}
-      </div>
+      </Typography>
       {props.profile.lookingForAJob &&
-      <div>
+      <Typography variant="subtitle2" sx={{fontSize: '18px'}}>
         <b>Профессиональные умения: </b>
-        {props.profile.lookingForAJobDescription || "Отсутствует"}
-      </div>}
-      <div>
+        {props.profile.lookingForAJobDescription || "Нет информации"}
+      </Typography>}
+      <Typography variant="subtitle2" sx={{fontSize: '18px'}}>
         <b>О себе: </b>
         {props.profile.aboutMe || "Отсутствует"}
-      </div>
-      <div>
+      </Typography>
+      <Typography variant="subtitle2" sx={{fontSize: '18px'}}>
         <b>Контакты: </b>
-      </div>
-      <div>
+      </Typography>
+      
+      <Typography variant="subtitle2" sx={{fontSize: '18px'}}>
         {Object.keys(props.profile.contacts).map((contact) => (
           <Contact key={contact} site={contact} url={props.profile.contacts[contact as keyof ContactsProfileType]} />
         ))}
-      </div>
+      </Typography>
       {props.authId === props.profile?.userId &&
-      <div>
-        <button onClick={props.activateEditMode}>Изменить данные</button>
-      </div>
-      }
-    </>
+      <Button size='small' onClick={props.activateEditMode} variant='contained' color='primary'>Изменить данные</Button>
+    }
+    </Stack>
   );
-};
+});
 
 export default ProfileData;

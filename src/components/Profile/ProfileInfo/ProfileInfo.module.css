@@ -11,12 +11,12 @@
     grid-template-columns: 4fr 10fr;
 }
 
-.avatar img {
+/* .avatar img {
     object-fit: cover;
     width: 150px;
     height: 150px;
     border-radius: 100%;
-}
+} */
 
 .description {
     margin-left: 50px;
@@ -26,7 +26,7 @@
 }
 
 
-
+/* 
 .avatar label {
     color: white;
     background-color: red;
@@ -36,11 +36,11 @@
     border-radius: 5px;
     width: 150px;
     height: 22px;
-}
+} */
 
-.avatar input[type='file'] {
+/* .avatar input[type='file'] {
     display: none;
-}
+} */
 
 .userName {
     font-size: 34px;

@@ -22,6 +22,7 @@ let initialState = {
   isFetching: false,
   followingInProgress: [] as Array<number>,
   filterUsers: {term: '', friend: null} as FilterUsersType,
+  changingFriends: false,
 };
 
 export type InitialStateType = typeof initialState;
@@ -70,6 +71,11 @@ let usersReducer = (state = initialState, action: ActionsTypes): InitialStateTyp
         ...state,
         filterUsers: action.payload
       }
+    case 'users/CHANGE_FRIENDS': 
+      return {
+        ...state, 
+        changingFriends: !state.changingFriends,
+      }
     default:
       return state;
   }
@@ -106,6 +112,9 @@ export const actions = {
     type: 'users/SET_FILTER_USERS',
     payload: {term, friend}
   } as const),
+  changeFriends: () => ({
+    type: 'users/CHANGE_FRIENDS',
+  } as const),
 }
 
 // export const setCurrentPage = actions.setCurrentPage; //чекнуть потом
@@ -120,7 +129,6 @@ export const requestUsers = (page: number, count: number, filterUsers: FilterUse
     dispatch(actions.setTotalCount(data.totalCount));
     dispatch(actions.setUsers(data.items));
     dispatch(actions.loading());
-    return Promise.resolve()
   };
 };
 
@@ -132,6 +140,7 @@ export const follow = (userID: number): ThunkType => {
       dispatch(actions.followUnfollow(userID));
     }
     dispatch(actions.followingProgress(false, userID));
+    dispatch(actions.changeFriends());
   };
 };
 
@@ -143,6 +152,7 @@ export const unFollow = (userID: number): ThunkType => {
       dispatch(actions.followUnfollow(userID));
     }
     dispatch(actions.followingProgress(false, userID));
+    dispatch(actions.changeFriends());
   };
 };
 

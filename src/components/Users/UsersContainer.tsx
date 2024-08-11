@@ -1,5 +1,5 @@
-import React, { useEffect, useLayoutEffect } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   requestUsers,
   follow,
@@ -18,7 +18,11 @@ import {
 } from 'use-query-params';
 import { getAuthId, getIsAuth } from "../../redux/authSelectors";
 
-const UsersContainer: React.FC = () => {
+const UsersContainer: React.FC = React.memo(() => {
+
+  const [didMountPage, setDidMountPage] = useState(false);
+  const [didMountFilter, setDidMountFilter] = useState(false)
+
 
   const [query, setQuery] = useQueryParams({
     page: NumberParam,
@@ -43,7 +47,6 @@ const UsersContainer: React.FC = () => {
     let actualPage = currentPage;
     if (!!query.page) actualPage = query.page;
     let queryFilter = { term: '', friend: null as null | boolean };
-    // let queryFilter = filter;
     if (!!query.term) queryFilter = { ...queryFilter, term: query.term };
     if (query.friend || query.friend === false) queryFilter = { ...queryFilter, friend: query.friend };
     dispatch(requestUsers(
@@ -55,7 +58,7 @@ const UsersContainer: React.FC = () => {
 
   useEffect(() => {
     debugger
-    if (totalCount) {
+    if (didMountPage) {
       let search: any = {};
       if (currentPage !== 1) search = { ...search, page: currentPage };
       if (filter.term !== '') search = { ...search, term: filter.term };
@@ -63,17 +66,21 @@ const UsersContainer: React.FC = () => {
       ) search = { ...search, friend: filter.friend };
       setQuery(search, 'push')
     }
+    else {
+      setDidMountPage(true);
+    }
   }, [currentPage])
 
   useEffect(() => {
     debugger
-    if (totalCount) {
+    if (didMountFilter) {
       let search: any = {};
-      // search = { ...search, page: 1 };
-      // dispatch(actions.setCurrentPage(1));
       if (filter.term !== '') search = { ...search, term: filter.term };
       if (filter.friend !== null) search = { ...search, friend: filter.friend };
       setQuery(search, 'push')
+    }
+    else {
+      setDidMountFilter(true);
     }
   }, [filter])
 
@@ -81,10 +88,6 @@ const UsersContainer: React.FC = () => {
     debugger
     dispatch(actions.setCurrentPage(query.page || 1));
     filterUsers(query.term || "", query.friend ? true : query.friend === false ? false : null);
-  }, [])
-
-
-  useEffect(() => {
     return () => {
       dispatch(actions.setCurrentPage(1));
       dispatch(actions.setFilterUsers('', null));
@@ -92,8 +95,6 @@ const UsersContainer: React.FC = () => {
   }, [])
 
   const onPaginationClick = (numberPage: number) => {
-    debugger
-    // props.requestUsers(numberPage, props.countUsers, props.filterUsers);
     dispatch(actions.setCurrentPage(numberPage));
   }
 
@@ -132,7 +133,7 @@ const UsersContainer: React.FC = () => {
       )}
     </React.Fragment>
   );
-}
+})
 
 export default UsersContainer;
 

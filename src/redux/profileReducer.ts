@@ -30,6 +30,7 @@ export type ProfileType = {
 export type PostDataType = {
   id: number
   message: string
+  fullName: string
 }
 
 let initialState = {
@@ -39,25 +40,30 @@ let initialState = {
       id: 1,
       message:
         "H&M объявила, что окончательно уходит из России. В рамках сворачивания бизнеса магазины на время откроют для распродаж.",
+      fullName: 'Den Grey',
     },
     {
       id: 2,
       message: "Казанских школьников обучат основам бизнеса за 2,4 млн рублей",
+      fullName: 'Петр Степанов',
     },
     {
       id: 3,
       message:
         'Канада отправила турбину Siemens для "Северного потока" в Германию в минувшее воскресенье, ее везут самолетом, а в России она должна быть к 24 июля // СМИ',
+      fullName: 'Алексей Попов',
     },
     {
       id: 4,
       message:
         "ЕС исключил ювелирные украшения из запрета на импорт российского золота, сообщает издание Politico со ссылкой на проект документа Еврокомиссии.",
+      fullName: 'Матвей Сафонов',
     },
     {
       id: 5,
       message:
         "Русский парень starter pack. Фамейе забивает пенальти и выводит Рубин вперед.",
+      fullName: 'Alex',
     },
   ] as Array<PostDataType>,
   status: "",
@@ -69,7 +75,7 @@ type InitialStateType = typeof initialState;
 const profileReducer = (state = initialState, action: ActionsTypes): InitialStateType => {
   switch (action.type) {
     case 'profile/ADD_NEW_POST':
-      let newPost = { id: (state.postData.length + 1), message: action.post };
+      let newPost = { id: (state.postData.length + 1), message: action.post, fullName: action.fullName };
       return {
         ...state,
         postData: [...state.postData, newPost],
@@ -97,8 +103,8 @@ const profileReducer = (state = initialState, action: ActionsTypes): InitialStat
 type ActionsTypes = InferActionsTypes<typeof actions>;
 
 export const actions = {
-  addNewPost: (post: string) => ({ type: 'profile/ADD_NEW_POST', post } as const),
-  setUserProfile: (profile: ProfileType) => ({
+  addNewPost: (post: string, fullName: string) => ({ type: 'profile/ADD_NEW_POST', post, fullName } as const),
+  setUserProfile: (profile: ProfileType | null) => ({
     type: 'profile/SET_USER_PROFILE',
     profile: profile,
   } as const),
@@ -141,7 +147,7 @@ export const savePhoto = (imageFile: any): ThunkType => async (dispatch) => {
   }
 }
 
-export const updateProfileData = (profile: ProfileType, setStatus: React.Dispatch<React.SetStateAction<null | string>>): ThunkType => async (dispatch, getState) => {
+export const updateProfileData = (profile: ProfileType): ThunkType => async (dispatch, getState) => {
   const authID = getState().auth.id;
   const data = await profileAPI.updateProfileData(profile);
   if (data.resultCode === 0) {
@@ -151,9 +157,6 @@ export const updateProfileData = (profile: ProfileType, setStatus: React.Dispatc
     else {
       throw new Error("user's id can't be null")
     }
-  }
-  else {
-    setStatus(data.messages[0]);
   }
 }
 

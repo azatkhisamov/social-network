@@ -1,3 +1,4 @@
+import { Typography } from "@mui/material";
 import React, { useState, useEffect, ChangeEvent } from "react";
 import s from "../ProfileInfo.module.css";
 
@@ -34,7 +35,7 @@ const Status: React.FC<PropsType> = (props: PropsType) => {
   return (
     <>
       {!editMode ? (
-        <span className={s.status} onClick={activateEdit}>{props.status || "Статус"}</span>
+        <Typography variant="subtitle2" gutterBottom component="div" onClick={activateEdit}>{props.status || null}</Typography>
       ) : (
         <input
           onChange={onStatusChange}

@@ -15,7 +15,7 @@ type PropsType = {
 const TextareaForm: React.FC<PropsType> = ({ label, ...props }) => {
     const [field, meta] = useField(props);
     return (
-        <FormControl fullWidth error={meta.touched && meta.error ? true : false}>
+        <FormControl sx={{ width: '700px' }} fullWidth error={meta.touched && meta.error ? true : false}>
             <InputLabel htmlFor={props.name}>{label}</InputLabel>
             <OutlinedInput multiline rows={2} id={props.name} {...props} {...field} label={label}/>
             {meta.touched && meta.error ?

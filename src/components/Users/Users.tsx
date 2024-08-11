@@ -4,8 +4,7 @@ import User from "./User/User";
 import Pagination from "./Pagination";
 import { UsersType } from "../../redux/usersReducer";
 import FilterUsersForm from "./FilterUsersForm";
-import { DecodedValueMap } from "use-query-params";
-import { Box, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 
 type PropsType = {
   users: Array<UsersType>
@@ -22,16 +21,12 @@ type PropsType = {
   query: any //
 }
 
-const Users: React.FC<PropsType> = (props: PropsType) => {
-  
+const Users: React.FC<PropsType> = React.memo((props: PropsType) => {
+
   return (
-    <Box>
-      <div className={s.heading}>
-        <Typography variant="h4" gutterBottom component="div">Пользователи</Typography>
-      </div>
-      <div className={s.form}>
-        <FilterUsersForm filterUsers={props.filterUsers} isAuth={props.isAuth} query={props.query} />
-      </div>
+    <Stack spacing={4}>
+      <Typography variant="h4" gutterBottom component="div">Пользователи</Typography>
+      <FilterUsersForm filterUsers={props.filterUsers} isAuth={props.isAuth} query={props.query} />
       <Pagination
         totalCount={props.totalCount}
         countUsers={props.countUsers}
@@ -48,8 +43,8 @@ const Users: React.FC<PropsType> = (props: PropsType) => {
           authID={props.authID}
         />
       ))}
-    </Box>
+    </Stack>
   );
-};
+});
 
 export default Users;

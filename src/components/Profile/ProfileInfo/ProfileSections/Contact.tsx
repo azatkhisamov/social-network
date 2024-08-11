@@ -11,7 +11,7 @@ const Contact: React.FC<PropsType> = (props: PropsType) => {
   return (
     <>
       <div className={s.contact}>
-        {props.site}: {props.url}
+        {props.site}: {props.url ? props.url : 'Нет информации'}
       </div>
     </>
   );

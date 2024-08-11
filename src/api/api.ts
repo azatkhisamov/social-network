@@ -2,11 +2,13 @@ import axios from 'axios';
 import { PhotosProfileType, ProfileType } from '../redux/profileReducer';
 import { UsersType } from '../redux/usersReducer';
 
+const apiKey = process.env.REACT_APP_API_KEY;
+
 const instance = axios.create({
     withCredentials: true,
     baseURL: "https://social-network.samuraijs.com/api/1.0/",
     headers: {
-        "api-key": "81216470-5d6e-440a-b988-9e8ce11d3516",
+        "api-key": apiKey!,
     } 
 })
 

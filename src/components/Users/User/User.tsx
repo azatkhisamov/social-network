@@ -1,8 +1,12 @@
 import React from "react";
 import s from "./User.module.css";
-import userPhoto from "./../../../assets/images/147144.png";
 import { NavLink } from "react-router-dom";
 import { UsersType } from "../../../redux/usersReducer";
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import { Avatar, CardActionArea, CardActions, Stack } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 type PropsType = {
   key: number
@@ -13,36 +17,37 @@ type PropsType = {
   authID: number | null
 }
 
-const User: React.FC<PropsType> = (props: PropsType) => {
+const User: React.FC<PropsType> = React.memo((props: PropsType) => {
   return (
-    <div className={s.user}>
-      <div className={s.avatar}>
-        <div>
-          <NavLink to={props.user.id !== props.authID ? `/profile/${props.user.id}` : '/profile'}>
-            <img
-              src={
-                props.user.photos.small != null
-                  ? props.user.photos.small
-                  : userPhoto
-              }
-            />
-          </NavLink>
-        </div>
-      </div>
-      <div className={s.button}>
-        <button disabled={props.followingInProgress.some(id => id == props.user.id)} onClick={() => {
-          props.user.followed ? props.unFollowUser(props.user.id) : props.followUser(props.user.id)
-        }}>
-          {props.user.followed === true ? "Удалить" : "Добавить"}
-        </button>
-      </div>
-      <div className={s.description}>
-        <div>{props.user.name}</div>
-        <div>Moscow, Russia</div>
-        <div>{props.user.status}</div>
-      </div>
-    </div>
+    <Card sx={{ maxWidth: 500 }}>
+      <CardActionArea>
+        <CardContent>
+          <Stack spacing={2} direction='row'>
+            <NavLink to={props.user.id !== props.authID ? `/profile/${props.user.id}` : '/profile'}>
+              <Avatar sx={{ width: 120, height: 120 }} alt={props.user.name} src={props.user.photos.small ? props.user.photos.small : undefined} />
+            </NavLink>
+            <Stack spacing={2}>
+              <Typography gutterBottom variant="h5" component="div">
+                {props.user.name}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {props.user.status}
+              </Typography>
+            </Stack>
+          </Stack>
+        </CardContent>
+      </CardActionArea>
+      <CardActions>
+        <LoadingButton loading={props.followingInProgress.some(id => id == props.user.id)}
+          variant="outlined"
+          onClick={() => {
+            props.user.followed ? props.unFollowUser(props.user.id) : props.followUser(props.user.id)
+          }}>
+          {props.user.followed === true ? "Отписаться" : "Подписаться"}
+        </LoadingButton>
+      </CardActions>
+    </Card>
   );
-};
+});
 
 export default User;

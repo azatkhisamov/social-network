@@ -16,8 +16,8 @@ import chatReducer from "./chatReducer";
 let rootReducers = combineReducers({
   profilePage: profileReducer,
   dialogsPage: dialogsReducer,
-  navbar: navbarReducer,
   usersPage: usersReducer,
+  navbar: navbarReducer,
   auth: authReducer,
   form: formReducer,
   app: appReducer,
@@ -31,7 +31,7 @@ export type InferActionsTypes<T> = T extends {[key: string]: (...args: any[]) =>
 
 
 const store = createStore(rootReducers, applyMiddleware(thunkMiddleware));
-
+// export type AppStateType = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch;
 
 export default store;

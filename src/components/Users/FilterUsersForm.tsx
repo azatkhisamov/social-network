@@ -19,7 +19,7 @@ type InitialValuesType = {
     friend: 'null' | 'true' | 'false'
 }
 
-const FilterUsersForm: React.FC<PropsType> = (props) => {
+const FilterUsersForm: React.FC<PropsType> = React.memo((props) => {
 
     const initialValues: InitialValuesType = {
         term: props.query.term,
@@ -32,7 +32,6 @@ const FilterUsersForm: React.FC<PropsType> = (props) => {
             setSubmitting(false);
         }}>
             {formik => {
-                console.log(formik)
                 return (
                     <Form>
                         <Stack spacing={1} direction={'row'}>
@@ -53,6 +52,6 @@ const FilterUsersForm: React.FC<PropsType> = (props) => {
             }}
         </Formik>
     )
-}
+})
 
 export default FilterUsersForm;
